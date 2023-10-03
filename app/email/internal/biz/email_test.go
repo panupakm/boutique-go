@@ -1,4 +1,4 @@
-package service
+package biz
 
 import (
 	"html/template"
@@ -8,7 +8,7 @@ import (
 )
 
 func TestCreateTemplateFromFile(t *testing.T) {
-	tmpls, err := createMapOfTemplates("../../template")
+	tmpls, err := createMapOfTemplates("../../templates")
 	assert.NoError(t, err)
 	assert.IsType(t, &template.Template{}, tmpls["confirmation.html"])
 }
