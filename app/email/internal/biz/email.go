@@ -38,7 +38,13 @@ func createMapOfTemplates(dir string) (map[string]*template.Template, error) {
 	}
 	entriesMap := make(map[string]*template.Template, len(entries))
 	for _, entry := range entries {
-		entriesMap[entry.Name()] = template.Must(template.ParseFiles(dir + "/" + entry.Name()))
+		tmpl := template.New(entry.Name())
+		tmpl.Funcs(template.FuncMap{
+			"divide": func(x, y int32) int32 {
+				return x / y
+			},
+		})
+		entriesMap[entry.Name()] = template.Must(tmpl.ParseFiles(dir + "/" + entry.Name()))
 	}
 
 	return entriesMap, nil

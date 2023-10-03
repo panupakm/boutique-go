@@ -44,6 +44,7 @@ func TestHttpSendEmail(t *testing.T) {
 					Cost: &api.Money{
 						CurrencyCode: "USD",
 						Units:        60,
+						Nanos:        500000000,
 					},
 				},
 				{
