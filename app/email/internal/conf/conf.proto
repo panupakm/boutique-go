@@ -1,0 +1,44 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "kratos-template/app/email/internal/conf;conf";
+
+import "google/protobuf/duration.proto";
+
+message Bootstrap {
+  Server server = 1;
+  Data data = 2;
+}
+
+message Server {
+  message HTTP {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  message GRPC {
+    string network = 1;
+    string addr = 2;
+    google.protobuf.Duration timeout = 3;
+  }
+  HTTP http = 1;
+  GRPC grpc = 2;
+}
+
+message Data {
+  message MailServer {
+    string host = 1;
+    uint32 port = 2;
+    string username = 3;
+    string password = 4;
+    string from = 5;
+    string template_dir = 6;
+  }
+  message Mail {
+    string subject = 1;
+    string template_name = 2;
+  }
+
+  MailServer mail_server = 1;
+  Mail order_confirm_mail = 2;
+}

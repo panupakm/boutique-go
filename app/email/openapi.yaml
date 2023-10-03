@@ -1,0 +1,105 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Email API
+    version: 0.0.1
+paths:
+    /email/order-confirmation:
+        post:
+            tags:
+                - Email
+            operationId: Email_SendOrderConfirmation
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.email.SendOrderConfirmationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.email.Empty'
+components:
+    schemas:
+        api.email.Address:
+            type: object
+            properties:
+                streetAddress:
+                    type: string
+                city:
+                    type: string
+                state:
+                    type: string
+                country:
+                    type: string
+                zipCode:
+                    type: integer
+                    format: int32
+        api.email.CartItem:
+            type: object
+            properties:
+                productId:
+                    type: string
+                quantity:
+                    type: integer
+                    format: int32
+        api.email.Empty:
+            type: object
+            properties: {}
+        api.email.Money:
+            type: object
+            properties:
+                currencyCode:
+                    type: string
+                    description: The 3-letter currency code defined in ISO 4217.
+                units:
+                    type: string
+                    description: |-
+                        The whole units of the amount.
+                         For example if `currencyCode` is `"USD"`, then 1 unit is one US dollar.
+                nanos:
+                    type: integer
+                    description: |-
+                        Number of nano (10^-9) units of the amount.
+                         The value must be between -999,999,999 and +999,999,999 inclusive.
+                         If `units` is positive, `nanos` must be positive or zero.
+                         If `units` is zero, `nanos` can be positive, zero, or negative.
+                         If `units` is negative, `nanos` must be negative or zero.
+                         For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
+                    format: int32
+        api.email.OrderItem:
+            type: object
+            properties:
+                item:
+                    $ref: '#/components/schemas/api.email.CartItem'
+                cost:
+                    $ref: '#/components/schemas/api.email.Money'
+        api.email.OrderResult:
+            type: object
+            properties:
+                orderId:
+                    type: string
+                shippingTrackingId:
+                    type: string
+                shippingCost:
+                    $ref: '#/components/schemas/api.email.Money'
+                shippingAddress:
+                    $ref: '#/components/schemas/api.email.Address'
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.email.OrderItem'
+        api.email.SendOrderConfirmationRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                order:
+                    $ref: '#/components/schemas/api.email.OrderResult'
+tags:
+    - name: Email

@@ -1,0 +1,19 @@
+server:
+  http:
+    addr: 0.0.0.0:8001
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9001
+    timeout: 1s
+data:
+  mailServer:
+    host: 0.0.0.0
+    port: 1025
+    from: boutique@example.com
+    username: admin
+    password: admin
+    templateDir: ./app/email/templates
+  orderConfirmMail:
+    subject: Order confirmation
+    templateName: confirmation.html
+
