@@ -1,0 +1,89 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: CartService API
+    version: 0.0.1
+paths:
+    /cart:
+        get:
+            tags:
+                - CartService
+            operationId: CartService_GetCart
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cart.service.Cart'
+        post:
+            tags:
+                - CartService
+            operationId: CartService_AddItem
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/cart.service.AddItemRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cart.service.Empty'
+        delete:
+            tags:
+                - CartService
+            operationId: CartService_EmptyCart
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/cart.service.Empty'
+components:
+    schemas:
+        cart.service.AddItemRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                item:
+                    $ref: '#/components/schemas/cart.service.CartItem'
+        cart.service.Cart:
+            type: object
+            properties:
+                userId:
+                    type: string
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/cart.service.CartItem'
+        cart.service.CartItem:
+            type: object
+            properties:
+                productId:
+                    type: string
+                quantity:
+                    type: integer
+                    format: int32
+        cart.service.Empty:
+            type: object
+            properties: {}
+tags:
+    - name: CartService

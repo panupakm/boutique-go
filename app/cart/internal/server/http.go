@@ -1,28 +1,20 @@
 package server
 
 import (
-	"context"
+	api "github.com/panupakm/boutique-go/api/cart"
+	"github.com/panupakm/boutique-go/app/cart/internal/conf"
+	"github.com/panupakm/boutique-go/app/cart/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/http"
-
-	api "github.com/panupakm/boutique-go/api/email"
-	"github.com/panupakm/boutique-go/app/email/internal/conf"
-	"github.com/panupakm/boutique-go/app/email/internal/service"
-	otel "github.com/panupakm/boutique-go/pkg/otel"
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, emailer *service.EmailService, logger log.Logger) *http.Server {
-
-	otel.SetupOTelSDK(context.Background(), "email", "1.0.0")
-
+func NewHTTPServer(c *conf.Server, cartService *service.CartServiceService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			tracing.Server(),
 		),
 	}
 	if c.Http.Network != "" {
@@ -35,7 +27,6 @@ func NewHTTPServer(c *conf.Server, emailer *service.EmailService, logger log.Log
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	api.RegisterEmailHTTPServer(srv, emailer)
-
+	api.RegisterCartServiceHTTPServer(srv, cartService)
 	return srv
 }

@@ -19,7 +19,7 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationEmailSendOrderConfirmation = "/api.email.Email/SendOrderConfirmation"
+const OperationEmailSendOrderConfirmation = "/email.service.Email/SendOrderConfirmation"
 
 type EmailHTTPServer interface {
 	SendOrderConfirmation(context.Context, *SendOrderConfirmationRequest) (*Empty, error)

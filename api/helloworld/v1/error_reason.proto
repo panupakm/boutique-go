@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package helloworld.v1;
+package boutiqeshop;
 
 option go_package = "kratos-template/api/helloworld/v1;v1";
 option java_multiple_files = true;

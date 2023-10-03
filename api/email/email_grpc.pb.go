@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Email_SendOrderConfirmation_FullMethodName = "/api.email.Email/SendOrderConfirmation"
+	Email_SendOrderConfirmation_FullMethodName = "/email.service.Email/SendOrderConfirmation"
 )
 
 // EmailClient is the client API for Email service.
@@ -96,7 +96,7 @@ func _Email_SendOrderConfirmation_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Email_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.email.Email",
+	ServiceName: "email.service.Email",
 	HandlerType: (*EmailServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

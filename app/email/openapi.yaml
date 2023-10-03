@@ -15,7 +15,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.email.SendOrderConfirmationRequest'
+                            $ref: '#/components/schemas/email.service.SendOrderConfirmationRequest'
                 required: true
             responses:
                 "200":
@@ -23,10 +23,10 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.email.Empty'
+                                $ref: '#/components/schemas/email.service.Empty'
 components:
     schemas:
-        api.email.Address:
+        email.service.Address:
             type: object
             properties:
                 streetAddress:
@@ -40,7 +40,7 @@ components:
                 zipCode:
                     type: integer
                     format: int32
-        api.email.CartItem:
+        email.service.CartItem:
             type: object
             properties:
                 productId:
@@ -48,10 +48,10 @@ components:
                 quantity:
                     type: integer
                     format: int32
-        api.email.Empty:
+        email.service.Empty:
             type: object
             properties: {}
-        api.email.Money:
+        email.service.Money:
             type: object
             properties:
                 currencyCode:
@@ -72,14 +72,14 @@ components:
                          If `units` is negative, `nanos` must be negative or zero.
                          For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
                     format: int32
-        api.email.OrderItem:
+        email.service.OrderItem:
             type: object
             properties:
                 item:
-                    $ref: '#/components/schemas/api.email.CartItem'
+                    $ref: '#/components/schemas/email.service.CartItem'
                 cost:
-                    $ref: '#/components/schemas/api.email.Money'
-        api.email.OrderResult:
+                    $ref: '#/components/schemas/email.service.Money'
+        email.service.OrderResult:
             type: object
             properties:
                 orderId:
@@ -87,19 +87,19 @@ components:
                 shippingTrackingId:
                     type: string
                 shippingCost:
-                    $ref: '#/components/schemas/api.email.Money'
+                    $ref: '#/components/schemas/email.service.Money'
                 shippingAddress:
-                    $ref: '#/components/schemas/api.email.Address'
+                    $ref: '#/components/schemas/email.service.Address'
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.email.OrderItem'
-        api.email.SendOrderConfirmationRequest:
+                        $ref: '#/components/schemas/email.service.OrderItem'
+        email.service.SendOrderConfirmationRequest:
             type: object
             properties:
                 email:
                     type: string
                 order:
-                    $ref: '#/components/schemas/api.email.OrderResult'
+                    $ref: '#/components/schemas/email.service.OrderResult'
 tags:
     - name: Email

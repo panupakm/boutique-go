@@ -3,8 +3,8 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-  args_bin = ["-conf", "app/email/configs/config.yaml"]
-  bin = "./bin/email"
+  args_bin = ["-conf", "app/cart/configs/config.yaml"]
+  bin = "./bin/cart"
   cmd = "make build"
   delay = 0
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
