@@ -33,6 +33,7 @@ func (s *CartServiceService) AddItem(ctx context.Context, req *pb.AddItemRequest
 	}
 	return &pb.Empty{}, err
 }
+
 func (s *CartServiceService) GetCart(ctx context.Context, req *pb.GetCartRequest) (*pb.Cart, error) {
 	cart, err := s.uc.GetCart(ctx, req.UserId)
 	if err != nil {
@@ -53,6 +54,8 @@ func (s *CartServiceService) GetCart(ctx context.Context, req *pb.GetCartRequest
 
 	return &returnCart, nil
 }
+
 func (s *CartServiceService) EmptyCart(ctx context.Context, req *pb.EmptyCartRequest) (*pb.Empty, error) {
-	return &pb.Empty{}, nil
+	err := s.uc.Empty(ctx, req.UserId)
+	return &pb.Empty{}, err
 }

@@ -19,9 +19,9 @@ type CartItem struct {
 
 // CartRepo is a Cart repo.
 type CartRepo interface {
-	AddItem(context.Context, string, *CartItem) error
 	Empty(context.Context, string) error
-	GetCart(context.Context, string) (*Cart, error)
+	AddItem(context.Context, string, *CartItem) error
+	Get(context.Context, string) (*Cart, error)
 }
 
 // CartUsecase is a Cart usecase.
@@ -48,10 +48,20 @@ func (uc *CartUsecase) AddItem(ctx context.Context, userId string, item *CartIte
 
 // GetCart get cart of a user.
 func (uc *CartUsecase) GetCart(ctx context.Context, userId string) (*Cart, error) {
-	cart, err := uc.repo.GetCart(ctx, userId)
+	cart, err := uc.repo.Get(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
 	uc.log.WithContext(ctx).Infof("GetCart: %s", userId)
 	return cart, nil
+}
+
+// EmptyCart clear all items in a cart.
+func (uc *CartUsecase) Empty(ctx context.Context, userId string) error {
+	err := uc.repo.Empty(ctx, userId)
+	if err != nil {
+		return err
+	}
+	uc.log.WithContext(ctx).Infof("EmptyCart: %s", userId)
+	return nil
 }
