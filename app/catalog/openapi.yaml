@@ -1,0 +1,110 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Catalog API
+    version: 0.0.1
+paths:
+    /catalog:
+        get:
+            tags:
+                - Catalog
+            operationId: Catalog_ListProducts
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.ListProductsResponse'
+    /product:
+        get:
+            tags:
+                - Catalog
+            operationId: Catalog_GetProduct
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.Product'
+    /products:
+        get:
+            tags:
+                - Catalog
+            operationId: Catalog_SearchProducts
+            parameters:
+                - name: query
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.SearchProductsResponse'
+components:
+    schemas:
+        boutiqueshop.ListProductsResponse:
+            type: object
+            properties:
+                products:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/boutiqueshop.Product'
+        boutiqueshop.Money:
+            type: object
+            properties:
+                currencyCode:
+                    type: string
+                    description: The 3-letter currency code defined in ISO 4217.
+                units:
+                    type: string
+                    description: |-
+                        The whole units of the amount.
+                         For example if `currencyCode` is `"USD"`, then 1 unit is one US dollar.
+                nanos:
+                    type: integer
+                    description: |-
+                        Number of nano (10^-9) units of the amount.
+                         The value must be between -999,999,999 and +999,999,999 inclusive.
+                         If `units` is positive, `nanos` must be positive or zero.
+                         If `units` is zero, `nanos` can be positive, zero, or negative.
+                         If `units` is negative, `nanos` must be negative or zero.
+                         For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
+                    format: int32
+        boutiqueshop.Product:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                picture:
+                    type: string
+                priceUsd:
+                    $ref: '#/components/schemas/boutiqueshop.Money'
+                categories:
+                    type: array
+                    items:
+                        type: string
+        boutiqueshop.SearchProductsResponse:
+            type: object
+            properties:
+                results:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/boutiqueshop.Product'
+tags:
+    - name: Catalog

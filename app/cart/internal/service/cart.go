@@ -19,7 +19,7 @@ type CartServiceService struct {
 func NewCartServiceService(uc *biz.CartUsecase, logger log.Logger) *CartServiceService {
 	return &CartServiceService{
 		uc:  uc,
-		log: log.NewHelper(log.With(logger, "module", "service/cart")),
+		log: log.NewHelper(log.With(logger, "module", "cart/service")),
 	}
 }
 

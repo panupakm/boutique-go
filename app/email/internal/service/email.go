@@ -19,7 +19,7 @@ type EmailService struct {
 func NewEmailService(ec *biz.EmailUseCase, logger log.Logger) *EmailService {
 	return &EmailService{
 		ec:  ec,
-		log: log.NewHelper(log.With(logger, "module", "service/email")),
+		log: log.NewHelper(log.With(logger, "module", "email/service")),
 	}
 }
 

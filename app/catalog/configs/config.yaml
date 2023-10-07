@@ -1,0 +1,11 @@
+server:
+  http:
+    addr: 0.0.0.0:8003
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9003
+    timeout: 1s
+data:
+  mongoDb:
+    uri: 'mongodb://user:password@localhost:27017'
+    database: product

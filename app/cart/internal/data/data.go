@@ -20,7 +20,7 @@ type Data struct {
 }
 
 func NewRedisCmd(conf *conf.Data, logger log.Logger) redis.Cmdable {
-	log := log.NewHelper(log.With(logger, "module", "cart-service/data/redis"))
+	log := log.NewHelper(log.With(logger, "module", "cart/data/redis"))
 	log.Infof("redis addr: %s", conf.Redis.Addr)
 	client := redis.NewClient(&redis.Options{
 		Addr:         conf.Redis.Addr,
