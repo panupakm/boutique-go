@@ -14,7 +14,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: product
+      MONGO_INITDB_DATABASE: catalog
       MONGO_INITDB_USERNAME: user
       MONGO_INITDB_PASSWORD: password
     ports:

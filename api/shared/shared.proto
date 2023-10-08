@@ -34,5 +34,8 @@ message CartItem {
     int32  quantity = 2;
 }
 
+message Pagination {
+    
+}
 
 message Empty {}

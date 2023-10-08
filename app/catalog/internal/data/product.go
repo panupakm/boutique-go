@@ -8,7 +8,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/panupakm/boutique-go/app/catalog/internal/biz"
 	"github.com/panupakm/boutique-go/pkg/boutique"
@@ -30,9 +29,8 @@ func NewProductRepo(data *Data, logger log.Logger) biz.ProductRepo {
 }
 
 func (r *productRepo) Query(ctx context.Context, q string) (prods []boutique.Product, err error) {
-
-	opts := options.Find().SetSort(bson.D{{Key: "Name", Value: 1}})
-	cursor, err := r.productColl.Find(ctx, opts)
+	filter := bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: q}}}}
+	cursor, err := r.productColl.Find(ctx, filter)
 	if err != nil {
 		return
 	}

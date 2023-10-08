@@ -8,4 +8,4 @@ server:
 data:
   mongoDb:
     uri: 'mongodb://user:password@localhost:27017'
-    database: product
+    database: catalog

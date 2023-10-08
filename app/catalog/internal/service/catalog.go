@@ -7,6 +7,7 @@ import (
 	pb "github.com/panupakm/boutique-go/api/catalog"
 	spb "github.com/panupakm/boutique-go/api/shared"
 	"github.com/panupakm/boutique-go/app/catalog/internal/biz"
+	"github.com/panupakm/boutique-go/pkg/boutique"
 )
 
 type CatalogService struct {
@@ -23,8 +24,42 @@ func NewCatalogService(uc *biz.CatalogUsecase, logger log.Logger) *CatalogServic
 	}
 }
 
+func ToProductProto(in *boutique.Product, out *pb.Product) {
+	out.Id = in.Id
+	out.Name = in.Name
+	out.Description = in.Description
+	out.Picture = in.Picture
+	out.PriceUsd = &spb.Money{}
+	ToMoneyProto(&in.PriceUsd, out.PriceUsd)
+	out.Categories = in.Categories
+}
+
+func ToMoneyProto(in *boutique.Money, out *spb.Money) {
+	in.CurrencyCode = out.CurrencyCode
+	in.Nanos = out.Nanos
+	in.Units = out.Units
+}
+
 func (s *CatalogService) ListProducts(ctx context.Context, req *spb.Empty) (*pb.ListProductsResponse, error) {
-	return &pb.ListProductsResponse{}, nil
+	ps, err := s.uc.ListProducts(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	products := make([]*pb.Product, 0, len(ps))
+	for _, p := range ps {
+		products = append(products, &pb.Product{
+			Id:          p.Id,
+			Name:        p.Name,
+			Description: p.Description,
+			Picture:     p.Picture,
+			Categories:  p.Categories,
+		})
+	}
+
+	return &pb.ListProductsResponse{
+		Products: products,
+	}, nil
 }
 
 func (s *CatalogService) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb.Product, error) {
@@ -33,20 +68,27 @@ func (s *CatalogService) GetProduct(ctx context.Context, req *pb.GetProductReque
 		return nil, err
 	}
 
-	return &pb.Product{
-		Id:          p.Id,
-		Name:        p.Name,
-		Description: p.Description,
-		Picture:     p.Picture,
-		PriceUsd: &spb.Money{
-			CurrencyCode: p.PriceUsd.CurrencyCode,
-			Units:        p.PriceUsd.Units,
-			Nanos:        p.PriceUsd.Nanos,
-		},
-		Categories: p.Categories,
-	}, nil
+	var res pb.Product
+	ToProductProto(&p, &res)
+	return &res, nil
 }
 
 func (s *CatalogService) SearchProducts(ctx context.Context, req *pb.SearchProductsRequest) (*pb.SearchProductsResponse, error) {
-	return &pb.SearchProductsResponse{}, nil
+	products, err := s.uc.SearchProducts(ctx, req.GetQuery())
+	if err != nil {
+		return nil, err
+	}
+
+	if len(products) == 0 {
+		return &pb.SearchProductsResponse{}, nil
+	}
+	resProducts := make([]*pb.Product, 0, len(products))
+	for _, p := range products {
+		var res pb.Product
+		ToProductProto(&p, &res)
+		resProducts = append(resProducts, &res)
+	}
+	return &pb.SearchProductsResponse{
+		Results: resProducts,
+	}, nil
 }

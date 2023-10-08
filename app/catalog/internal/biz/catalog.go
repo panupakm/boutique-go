@@ -46,7 +46,7 @@ func (uc *CatalogUsecase) GetProduct(ctx context.Context, productId string) (bou
 
 // EmptyCart clear all items in a cart.
 func (uc *CatalogUsecase) SearchProducts(ctx context.Context, query string) ([]boutique.Product, error) {
-	list, err := uc.repo.Query(ctx, "")
+	list, err := uc.repo.Query(ctx, query)
 	if err != nil {
 		return []boutique.Product{}, err
 	}
