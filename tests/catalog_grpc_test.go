@@ -13,7 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
 	api "github.com/panupakm/boutique-go/api/catalog"
-	sharedApi "github.com/panupakm/boutique-go/api/shared"
 	"github.com/panupakm/boutique-go/pkg/boutique/generators"
 	"github.com/panupakm/boutique-go/pkg/util"
 	"github.com/panupakm/boutique-go/tests/config"
@@ -58,10 +57,29 @@ func newMongoDb(ctx context.Context, uri string, database string) *mongo.Databas
 }
 
 func TestGrpcListProducts(t *testing.T) {
-	res, err := client.ListProducts(context.Background(), &sharedApi.Empty{})
+	res, err := client.ListProducts(context.Background(), &api.ListProductsRequest{})
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	require.LessOrEqual(t, 100, len(res.Products))
+}
+
+func TestGrpcListProductsWithPagination(t *testing.T) {
+	res1, err := client.ListProducts(context.Background(), &api.ListProductsRequest{
+		PageSize: 10,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, res1)
+	require.Equal(t, 10, len(res1.Products))
+
+	res2, err := client.ListProducts(context.Background(), &api.ListProductsRequest{
+		PageSize:  10,
+		PageToken: res1.Products[len(res1.Products)-1].Id,
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, res2)
+	require.Equal(t, 10, len(res1.Products))
+	require.NotEqual(t, res1.Products[0].Id, res2.Products[0].Id)
 }
 
 func TestGrpcGetProduct(t *testing.T) {
@@ -87,4 +105,28 @@ func TestGrpcSearchProduct(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, res)
 	require.Equal(t, int(n), len(res.Results))
+}
+
+func TestGrpcSearchProductWithPagination(t *testing.T) {
+	n := uint(15)
+	searchText := util.GetRandomStr(10)
+
+	generators.GenerateProducts(context.Background(), mongoDb, "products", searchText+" %s ", n, false)
+
+	res, err := client.SearchProducts(context.Background(), &api.SearchProductsRequest{
+		Query:    searchText,
+		PageSize: 10,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, res)
+	require.Equal(t, int(10), len(res.Results))
+
+	res, err = client.SearchProducts(context.Background(), &api.SearchProductsRequest{
+		Query:     searchText,
+		PageSize:  10,
+		PageToken: res.Results[len(res.Results)-1].Id,
+	})
+	require.NoError(t, err)
+	require.NotNil(t, res)
+	require.Equal(t, int(5), len(res.Results))
 }

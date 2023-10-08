@@ -10,7 +10,7 @@ import (
 
 // ProductRepo is a Cart repo.
 type ProductRepo interface {
-	Query(context.Context, string) ([]boutique.Product, error)
+	Query(context.Context, string, int, string) ([]boutique.Product, error)
 	GetProduct(context.Context, string) (boutique.Product, error)
 }
 
@@ -26,8 +26,8 @@ func NewCatalogUsecase(repo ProductRepo, logger log.Logger) *CatalogUsecase {
 }
 
 // AddItem add cart item into a cart for a user.
-func (uc *CatalogUsecase) ListProducts(ctx context.Context) ([]boutique.Product, error) {
-	list, err := uc.repo.Query(ctx, "")
+func (uc *CatalogUsecase) ListProducts(ctx context.Context, pageSize int, pageToken string) ([]boutique.Product, error) {
+	list, err := uc.repo.Query(ctx, "", pageSize, pageToken)
 	if err != nil {
 		return []boutique.Product{}, err
 	}
@@ -45,8 +45,8 @@ func (uc *CatalogUsecase) GetProduct(ctx context.Context, productId string) (bou
 }
 
 // EmptyCart clear all items in a cart.
-func (uc *CatalogUsecase) SearchProducts(ctx context.Context, query string) ([]boutique.Product, error) {
-	list, err := uc.repo.Query(ctx, query)
+func (uc *CatalogUsecase) SearchProducts(ctx context.Context, query string, pageSize int, pageToken string) ([]boutique.Product, error) {
+	list, err := uc.repo.Query(ctx, query, pageSize, pageToken)
 	if err != nil {
 		return []boutique.Product{}, err
 	}

@@ -10,7 +10,7 @@ option java_multiple_files = true;
 option java_package = "api.catalog";
 
 service Catalog {
-	rpc ListProducts (Empty) returns (ListProductsResponse) {
+	rpc ListProducts (ListProductsRequest) returns (ListProductsResponse) {
 		option (google.api.http) = {
 			get: "/catalog"
 		};
@@ -31,6 +31,11 @@ service Catalog {
 
 message ListProductsResponse {
 	repeated Product products = 1;
+	string page_token = 2;
+}
+message ListProductsRequest {
+	int32 page_size = 1;
+	string page_token = 2;		
 }
 
 message Product {
@@ -48,6 +53,8 @@ message GetProductRequest {
 
 message SearchProductsRequest {
 	string query = 1;
+	int32 page_size = 2;
+	string page_token = 3;
 }
 
 message SearchProductsResponse {

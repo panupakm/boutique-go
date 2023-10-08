@@ -8,6 +8,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/panupakm/boutique-go/app/catalog/internal/biz"
 	"github.com/panupakm/boutique-go/pkg/boutique"
@@ -28,12 +29,18 @@ func NewProductRepo(data *Data, logger log.Logger) biz.ProductRepo {
 	}
 }
 
-func (r *productRepo) Query(ctx context.Context, q string) (prods []boutique.Product, err error) {
-	filter := bson.D{{}}
+func (r *productRepo) Query(ctx context.Context, q string, pageSize int, pageToken string) (prods []boutique.Product, err error) {
+	var filter bson.M = bson.M{}
 	if q != "" {
-		filter = bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: q}}}}
+		filter = bson.M{"$text": bson.M{"$search": q}}
 	}
-	cursor, err := r.productColl.Find(ctx, filter)
+
+	if pageToken != "" {
+		filter["id"] = bson.M{"$gt": pageToken}
+	}
+
+	opts := options.Find().SetLimit(int64(pageSize)).SetSort(bson.M{"id": 1})
+	cursor, err := r.productColl.Find(ctx, filter, opts)
 	if err != nil {
 		return
 	}

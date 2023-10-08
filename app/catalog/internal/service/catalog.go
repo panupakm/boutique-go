@@ -40,8 +40,8 @@ func ToMoneyProto(in *boutique.Money, out *spb.Money) {
 	in.Units = out.Units
 }
 
-func (s *CatalogService) ListProducts(ctx context.Context, req *spb.Empty) (*pb.ListProductsResponse, error) {
-	ps, err := s.uc.ListProducts(ctx)
+func (s *CatalogService) ListProducts(ctx context.Context, req *pb.ListProductsRequest) (*pb.ListProductsResponse, error) {
+	ps, err := s.uc.ListProducts(ctx, int(req.GetPageSize()), req.GetPageToken())
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (s *CatalogService) GetProduct(ctx context.Context, req *pb.GetProductReque
 }
 
 func (s *CatalogService) SearchProducts(ctx context.Context, req *pb.SearchProductsRequest) (*pb.SearchProductsResponse, error) {
-	products, err := s.uc.SearchProducts(ctx, req.GetQuery())
+	products, err := s.uc.SearchProducts(ctx, req.GetQuery(), int(req.GetPageSize()), req.GetPageToken())
 	if err != nil {
 		return nil, err
 	}

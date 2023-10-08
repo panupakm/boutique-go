@@ -11,6 +11,16 @@ paths:
             tags:
                 - Catalog
             operationId: Catalog_ListProducts
+            parameters:
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -45,6 +55,15 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -61,6 +80,8 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/boutiqueshop.Product'
+                pageToken:
+                    type: string
         boutiqueshop.Money:
             type: object
             properties:

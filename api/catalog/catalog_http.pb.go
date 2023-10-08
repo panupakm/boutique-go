@@ -10,7 +10,6 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
-	shared "github.com/panupakm/boutique-go/api/shared"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -26,7 +25,7 @@ const OperationCatalogSearchProducts = "/boutiqueshop.Catalog/SearchProducts"
 
 type CatalogHTTPServer interface {
 	GetProduct(context.Context, *GetProductRequest) (*Product, error)
-	ListProducts(context.Context, *shared.Empty) (*ListProductsResponse, error)
+	ListProducts(context.Context, *ListProductsRequest) (*ListProductsResponse, error)
 	SearchProducts(context.Context, *SearchProductsRequest) (*SearchProductsResponse, error)
 }
 
@@ -39,13 +38,13 @@ func RegisterCatalogHTTPServer(s *http.Server, srv CatalogHTTPServer) {
 
 func _Catalog_ListProducts0_HTTP_Handler(srv CatalogHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in shared.Empty
+		var in ListProductsRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationCatalogListProducts)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListProducts(ctx, req.(*shared.Empty))
+			return srv.ListProducts(ctx, req.(*ListProductsRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -96,7 +95,7 @@ func _Catalog_SearchProducts0_HTTP_Handler(srv CatalogHTTPServer) func(ctx http.
 
 type CatalogHTTPClient interface {
 	GetProduct(ctx context.Context, req *GetProductRequest, opts ...http.CallOption) (rsp *Product, err error)
-	ListProducts(ctx context.Context, req *shared.Empty, opts ...http.CallOption) (rsp *ListProductsResponse, err error)
+	ListProducts(ctx context.Context, req *ListProductsRequest, opts ...http.CallOption) (rsp *ListProductsResponse, err error)
 	SearchProducts(ctx context.Context, req *SearchProductsRequest, opts ...http.CallOption) (rsp *SearchProductsResponse, err error)
 }
 
@@ -121,7 +120,7 @@ func (c *CatalogHTTPClientImpl) GetProduct(ctx context.Context, in *GetProductRe
 	return &out, err
 }
 
-func (c *CatalogHTTPClientImpl) ListProducts(ctx context.Context, in *shared.Empty, opts ...http.CallOption) (*ListProductsResponse, error) {
+func (c *CatalogHTTPClientImpl) ListProducts(ctx context.Context, in *ListProductsRequest, opts ...http.CallOption) (*ListProductsResponse, error) {
 	var out ListProductsResponse
 	pattern := "/catalog"
 	path := binding.EncodeURL(pattern, in, true)

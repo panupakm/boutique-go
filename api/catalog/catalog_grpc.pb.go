@@ -8,7 +8,6 @@ package catalog
 
 import (
 	context "context"
-	shared "github.com/panupakm/boutique-go/api/shared"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -29,7 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CatalogClient interface {
-	ListProducts(ctx context.Context, in *shared.Empty, opts ...grpc.CallOption) (*ListProductsResponse, error)
+	ListProducts(ctx context.Context, in *ListProductsRequest, opts ...grpc.CallOption) (*ListProductsResponse, error)
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*Product, error)
 	SearchProducts(ctx context.Context, in *SearchProductsRequest, opts ...grpc.CallOption) (*SearchProductsResponse, error)
 }
@@ -42,7 +41,7 @@ func NewCatalogClient(cc grpc.ClientConnInterface) CatalogClient {
 	return &catalogClient{cc}
 }
 
-func (c *catalogClient) ListProducts(ctx context.Context, in *shared.Empty, opts ...grpc.CallOption) (*ListProductsResponse, error) {
+func (c *catalogClient) ListProducts(ctx context.Context, in *ListProductsRequest, opts ...grpc.CallOption) (*ListProductsResponse, error) {
 	out := new(ListProductsResponse)
 	err := c.cc.Invoke(ctx, Catalog_ListProducts_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -73,7 +72,7 @@ func (c *catalogClient) SearchProducts(ctx context.Context, in *SearchProductsRe
 // All implementations must embed UnimplementedCatalogServer
 // for forward compatibility
 type CatalogServer interface {
-	ListProducts(context.Context, *shared.Empty) (*ListProductsResponse, error)
+	ListProducts(context.Context, *ListProductsRequest) (*ListProductsResponse, error)
 	GetProduct(context.Context, *GetProductRequest) (*Product, error)
 	SearchProducts(context.Context, *SearchProductsRequest) (*SearchProductsResponse, error)
 	mustEmbedUnimplementedCatalogServer()
@@ -83,7 +82,7 @@ type CatalogServer interface {
 type UnimplementedCatalogServer struct {
 }
 
-func (UnimplementedCatalogServer) ListProducts(context.Context, *shared.Empty) (*ListProductsResponse, error) {
+func (UnimplementedCatalogServer) ListProducts(context.Context, *ListProductsRequest) (*ListProductsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProducts not implemented")
 }
 func (UnimplementedCatalogServer) GetProduct(context.Context, *GetProductRequest) (*Product, error) {
@@ -106,7 +105,7 @@ func RegisterCatalogServer(s grpc.ServiceRegistrar, srv CatalogServer) {
 }
 
 func _Catalog_ListProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(shared.Empty)
+	in := new(ListProductsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -118,7 +117,7 @@ func _Catalog_ListProducts_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: Catalog_ListProducts_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CatalogServer).ListProducts(ctx, req.(*shared.Empty))
+		return srv.(CatalogServer).ListProducts(ctx, req.(*ListProductsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
