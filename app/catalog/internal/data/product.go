@@ -29,7 +29,10 @@ func NewProductRepo(data *Data, logger log.Logger) biz.ProductRepo {
 }
 
 func (r *productRepo) Query(ctx context.Context, q string) (prods []boutique.Product, err error) {
-	filter := bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: q}}}}
+	filter := bson.D{{}}
+	if q != "" {
+		filter = bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: q}}}}
+	}
 	cursor, err := r.productColl.Find(ctx, filter)
 	if err != nil {
 		return

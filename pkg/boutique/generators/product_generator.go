@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func GenerateProducts(ctx context.Context, database *mongo.Database, collection string, fmtstr string, num uint, drop bool) {
+func GenerateProducts(ctx context.Context, database *mongo.Database, collection string, fmtstr string, num uint, drop bool) []string {
 
 	coll := database.Collection(collection)
 	if drop {
@@ -26,11 +26,14 @@ func GenerateProducts(ctx context.Context, database *mongo.Database, collection 
 
 	}
 	docs := []interface{}{}
+	uuids := make([]string, 0, num)
 
 	for i := uint(0); i < num; i++ {
 		book := gofakeit.Book()
+		newUuid := uuid.New().String()
+		uuids = append(uuids, newUuid)
 		docs = append(docs, bson.M{
-			"id": uuid.New().String(),
+			"id": newUuid,
 			"name": func() string {
 				if fmtstr == "" {
 					return book.Title
@@ -48,9 +51,10 @@ func GenerateProducts(ctx context.Context, database *mongo.Database, collection 
 	}
 
 	opts := options.InsertMany().SetOrdered(false)
-	res, err := coll.InsertMany(ctx, docs, opts)
+	_, err := coll.InsertMany(ctx, docs, opts)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("inserted %d documents\n", len(res.InsertedIDs))
+
+	return uuids
 }

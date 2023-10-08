@@ -64,6 +64,17 @@ func TestGrpcListProducts(t *testing.T) {
 	require.LessOrEqual(t, 100, len(res.Products))
 }
 
+func TestGrpcGetProduct(t *testing.T) {
+
+	uuids := generators.GenerateProducts(context.Background(), mongoDb, "products", "", 1, false)
+
+	res, err := client.GetProduct(context.Background(), &api.GetProductRequest{
+		Id: uuids[0],
+	})
+	require.NoError(t, err)
+	require.Equal(t, uuids[0], res.Id)
+}
+
 func TestGrpcSearchProduct(t *testing.T) {
 	n := uint(10)
 	searchText := util.GetRandomStr(10)
@@ -75,5 +86,5 @@ func TestGrpcSearchProduct(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, res)
-	require.Equal(t, n, len(res.Results))
+	require.Equal(t, int(n), len(res.Results))
 }
