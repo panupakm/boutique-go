@@ -8,6 +8,7 @@ package catalog
 
 import (
 	context "context"
+	shared "github.com/panupakm/boutique-go/api/shared"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -29,7 +30,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CatalogClient interface {
 	ListProducts(ctx context.Context, in *ListProductsRequest, opts ...grpc.CallOption) (*ListProductsResponse, error)
-	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*Product, error)
+	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*shared.Product, error)
 	SearchProducts(ctx context.Context, in *SearchProductsRequest, opts ...grpc.CallOption) (*SearchProductsResponse, error)
 }
 
@@ -50,8 +51,8 @@ func (c *catalogClient) ListProducts(ctx context.Context, in *ListProductsReques
 	return out, nil
 }
 
-func (c *catalogClient) GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*Product, error) {
-	out := new(Product)
+func (c *catalogClient) GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*shared.Product, error) {
+	out := new(shared.Product)
 	err := c.cc.Invoke(ctx, Catalog_GetProduct_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -73,7 +74,7 @@ func (c *catalogClient) SearchProducts(ctx context.Context, in *SearchProductsRe
 // for forward compatibility
 type CatalogServer interface {
 	ListProducts(context.Context, *ListProductsRequest) (*ListProductsResponse, error)
-	GetProduct(context.Context, *GetProductRequest) (*Product, error)
+	GetProduct(context.Context, *GetProductRequest) (*shared.Product, error)
 	SearchProducts(context.Context, *SearchProductsRequest) (*SearchProductsResponse, error)
 	mustEmbedUnimplementedCatalogServer()
 }
@@ -85,7 +86,7 @@ type UnimplementedCatalogServer struct {
 func (UnimplementedCatalogServer) ListProducts(context.Context, *ListProductsRequest) (*ListProductsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProducts not implemented")
 }
-func (UnimplementedCatalogServer) GetProduct(context.Context, *GetProductRequest) (*Product, error) {
+func (UnimplementedCatalogServer) GetProduct(context.Context, *GetProductRequest) (*shared.Product, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProduct not implemented")
 }
 func (UnimplementedCatalogServer) SearchProducts(context.Context, *SearchProductsRequest) (*SearchProductsResponse, error) {

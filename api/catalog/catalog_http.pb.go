@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	shared "github.com/panupakm/boutique-go/api/shared"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,7 +25,7 @@ const OperationCatalogListProducts = "/boutiqueshop.Catalog/ListProducts"
 const OperationCatalogSearchProducts = "/boutiqueshop.Catalog/SearchProducts"
 
 type CatalogHTTPServer interface {
-	GetProduct(context.Context, *GetProductRequest) (*Product, error)
+	GetProduct(context.Context, *GetProductRequest) (*shared.Product, error)
 	ListProducts(context.Context, *ListProductsRequest) (*ListProductsResponse, error)
 	SearchProducts(context.Context, *SearchProductsRequest) (*SearchProductsResponse, error)
 }
@@ -69,7 +70,7 @@ func _Catalog_GetProduct0_HTTP_Handler(srv CatalogHTTPServer) func(ctx http.Cont
 		if err != nil {
 			return err
 		}
-		reply := out.(*Product)
+		reply := out.(*shared.Product)
 		return ctx.Result(200, reply)
 	}
 }
@@ -94,7 +95,7 @@ func _Catalog_SearchProducts0_HTTP_Handler(srv CatalogHTTPServer) func(ctx http.
 }
 
 type CatalogHTTPClient interface {
-	GetProduct(ctx context.Context, req *GetProductRequest, opts ...http.CallOption) (rsp *Product, err error)
+	GetProduct(ctx context.Context, req *GetProductRequest, opts ...http.CallOption) (rsp *shared.Product, err error)
 	ListProducts(ctx context.Context, req *ListProductsRequest, opts ...http.CallOption) (rsp *ListProductsResponse, err error)
 	SearchProducts(ctx context.Context, req *SearchProductsRequest, opts ...http.CallOption) (rsp *SearchProductsResponse, err error)
 }
@@ -107,8 +108,8 @@ func NewCatalogHTTPClient(client *http.Client) CatalogHTTPClient {
 	return &CatalogHTTPClientImpl{client}
 }
 
-func (c *CatalogHTTPClientImpl) GetProduct(ctx context.Context, in *GetProductRequest, opts ...http.CallOption) (*Product, error) {
-	var out Product
+func (c *CatalogHTTPClientImpl) GetProduct(ctx context.Context, in *GetProductRequest, opts ...http.CallOption) (*shared.Product, error) {
+	var out shared.Product
 	pattern := "/product"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCatalogGetProduct))

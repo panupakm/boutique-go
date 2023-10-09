@@ -7,8 +7,8 @@ import (
 	pb "github.com/panupakm/boutique-go/api/catalog"
 	spb "github.com/panupakm/boutique-go/api/shared"
 	"github.com/panupakm/boutique-go/app/catalog/internal/biz"
-	"github.com/panupakm/boutique-go/pkg/boutique"
-	"github.com/panupakm/boutique-go/pkg/boutique/money"
+	"github.com/panupakm/boutique-go/pkg/money"
+	"github.com/panupakm/boutique-go/pkg/product"
 )
 
 type CatalogService struct {
@@ -25,7 +25,7 @@ func NewCatalogService(uc *biz.CatalogUsecase, logger log.Logger) *CatalogServic
 	}
 }
 
-func ToProductProto(in *boutique.Product, out *pb.Product) {
+func ToProductProto(in *product.Product, out *spb.Product) {
 	out.Id = in.Id
 	out.Name = in.Name
 	out.Description = in.Description
@@ -47,9 +47,9 @@ func (s *CatalogService) ListProducts(ctx context.Context, req *pb.ListProductsR
 		return nil, err
 	}
 
-	products := make([]*pb.Product, 0, len(ps))
+	products := make([]*spb.Product, 0, len(ps))
 	for _, p := range ps {
-		products = append(products, &pb.Product{
+		products = append(products, &spb.Product{
 			Id:          p.Id,
 			Name:        p.Name,
 			Description: p.Description,
@@ -63,13 +63,13 @@ func (s *CatalogService) ListProducts(ctx context.Context, req *pb.ListProductsR
 	}, nil
 }
 
-func (s *CatalogService) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb.Product, error) {
+func (s *CatalogService) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*spb.Product, error) {
 	p, err := s.uc.GetProduct(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}
 
-	var res pb.Product
+	var res spb.Product
 	ToProductProto(&p, &res)
 	return &res, nil
 }
@@ -83,9 +83,9 @@ func (s *CatalogService) SearchProducts(ctx context.Context, req *pb.SearchProdu
 	if len(products) == 0 {
 		return &pb.SearchProductsResponse{}, nil
 	}
-	resProducts := make([]*pb.Product, 0, len(products))
+	resProducts := make([]*spb.Product, 0, len(products))
 	for _, p := range products {
-		var res pb.Product
+		var res spb.Product
 		ToProductProto(&p, &res)
 		resProducts = append(resProducts, &res)
 	}

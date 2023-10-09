@@ -6,7 +6,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 
 	"github.com/panupakm/boutique-go/app/checkout/internal/biz"
-	"github.com/panupakm/boutique-go/pkg/boutique"
+	"github.com/panupakm/boutique-go/pkg/product"
 )
 
 type catalogRepo struct {
@@ -22,10 +22,10 @@ func NewCatalogRepo(data *Data, logger log.Logger) biz.CatalogRepo {
 	}
 }
 
-func (r *catalogRepo) GetProduct(ctx context.Context, productId string) (boutique.Product, error) {
+func (r *catalogRepo) GetProduct(ctx context.Context, productId string) (product.Product, error) {
 	// product, err := r.data.clc.GetProduct(ctx, &catalogApi.GetProductRequest{
 	// 	Id: productId,
 	// })
 
-	return boutique.Product{}, nil
+	return product.Product{}, nil
 }

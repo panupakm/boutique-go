@@ -38,15 +38,6 @@ message ListProductsRequest {
 	string page_token = 2;		
 }
 
-message Product {
-	string id = 1;
-	string name = 2;
-	string description = 3;
-	string picture = 4;
-	Money price_usd = 5;
-	repeated string categories = 6;
-}
-
 message GetProductRequest {
 	string id = 1;
 } 

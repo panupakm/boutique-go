@@ -16,6 +16,8 @@ package money
 
 import (
 	"errors"
+
+	spb "github.com/panupakm/boutique-go/api/shared"
 )
 
 const (
@@ -133,4 +135,16 @@ func MultiplySlow(m Money, n uint32) Money {
 		n--
 	}
 	return out
+}
+
+func ToProto(in *Money, out *spb.Money) {
+	in.CurrencyCode = out.CurrencyCode
+	in.Nanos = out.Nanos
+	in.Units = out.Units
+}
+
+func ToBiz(in *spb.Money, out *Money) {
+	in.CurrencyCode = out.CurrencyCode
+	in.Nanos = out.Nanos
+	in.Units = out.Units
 }

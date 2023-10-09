@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/panupakm/boutique-go/app/catalog/internal/biz"
-	"github.com/panupakm/boutique-go/pkg/boutique"
+	"github.com/panupakm/boutique-go/pkg/product"
 )
 
 type productRepo struct {
@@ -29,7 +29,7 @@ func NewProductRepo(data *Data, logger log.Logger) biz.ProductRepo {
 	}
 }
 
-func (r *productRepo) Query(ctx context.Context, q string, pageSize int, pageToken string) (prods []boutique.Product, err error) {
+func (r *productRepo) Query(ctx context.Context, q string, pageSize int, pageToken string) (prods []product.Product, err error) {
 	var filter bson.M = bson.M{}
 	if q != "" {
 		filter = bson.M{"$text": bson.M{"$search": q}}
@@ -56,7 +56,7 @@ func (r *productRepo) Query(ctx context.Context, q string, pageSize int, pageTok
 			err = tmpErr
 			return
 		}
-		var prod boutique.Product
+		var prod product.Product
 		json.Unmarshal(jsonData, &prod)
 		prods = append(prods, prod)
 	}
@@ -64,13 +64,13 @@ func (r *productRepo) Query(ctx context.Context, q string, pageSize int, pageTok
 	return
 }
 
-func (r *productRepo) GetProduct(ctx context.Context, id string) (boutique.Product, error) {
-	prod := boutique.Product{}
+func (r *productRepo) GetProduct(ctx context.Context, id string) (product.Product, error) {
+	prod := product.Product{}
 	if err := r.productColl.FindOne(ctx, bson.M{"id": id}).Decode(&prod); err != nil {
 		if err == mongo.ErrNoDocuments {
-			return boutique.Product{}, nil
+			return product.Product{}, nil
 		}
-		return boutique.Product{}, err
+		return product.Product{}, err
 	}
 
 	return prod, nil
