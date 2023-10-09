@@ -34,8 +34,25 @@ message CartItem {
     int32  quantity = 2;
 }
 
-message Pagination {
-    
+
+message CreditCardInfo {
+    string credit_card_number = 1;
+    int32 credit_card_cvv = 2;
+    int32 credit_card_expiration_year = 3;
+    int32 credit_card_expiration_month = 4;
+}
+
+message OrderResult {
+    string order_id = 1;
+    string shipping_tracking_id = 2;
+    Money shipping_cost = 3;
+    Address shipping_address = 4;
+    OrderItem items = 5;
+}
+
+message OrderItem {
+    CartItem item = 1;
+    Money cost = 2;
 }
 
 message Empty {}

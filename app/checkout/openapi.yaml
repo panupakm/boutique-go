@@ -1,0 +1,125 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Checkout API
+    version: 0.0.1
+paths:
+    /checkout:
+        post:
+            tags:
+                - Checkout
+            operationId: Checkout_PlaceOrder
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/boutiqueshop.PlaceOrderRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.PlaceOrderResponse'
+components:
+    schemas:
+        boutiqueshop.Address:
+            type: object
+            properties:
+                streetAddress:
+                    type: string
+                city:
+                    type: string
+                state:
+                    type: string
+                country:
+                    type: string
+                zipCode:
+                    type: integer
+                    format: int32
+        boutiqueshop.CartItem:
+            type: object
+            properties:
+                productId:
+                    type: string
+                quantity:
+                    type: integer
+                    format: int32
+        boutiqueshop.CreditCardInfo:
+            type: object
+            properties:
+                creditCardNumber:
+                    type: string
+                creditCardCvv:
+                    type: integer
+                    format: int32
+                creditCardExpirationYear:
+                    type: integer
+                    format: int32
+                creditCardExpirationMonth:
+                    type: integer
+                    format: int32
+        boutiqueshop.Money:
+            type: object
+            properties:
+                currencyCode:
+                    type: string
+                    description: The 3-letter currency code defined in ISO 4217.
+                units:
+                    type: string
+                    description: |-
+                        The whole units of the amount.
+                         For example if `currencyCode` is `"USD"`, then 1 unit is one US dollar.
+                nanos:
+                    type: integer
+                    description: |-
+                        Number of nano (10^-9) units of the amount.
+                         The value must be between -999,999,999 and +999,999,999 inclusive.
+                         If `units` is positive, `nanos` must be positive or zero.
+                         If `units` is zero, `nanos` can be positive, zero, or negative.
+                         If `units` is negative, `nanos` must be negative or zero.
+                         For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
+                    format: int32
+        boutiqueshop.OrderItem:
+            type: object
+            properties:
+                item:
+                    $ref: '#/components/schemas/boutiqueshop.CartItem'
+                cost:
+                    $ref: '#/components/schemas/boutiqueshop.Money'
+        boutiqueshop.OrderResult:
+            type: object
+            properties:
+                orderId:
+                    type: string
+                shippingTrackingId:
+                    type: string
+                shippingCost:
+                    $ref: '#/components/schemas/boutiqueshop.Money'
+                shippingAddress:
+                    $ref: '#/components/schemas/boutiqueshop.Address'
+                items:
+                    $ref: '#/components/schemas/boutiqueshop.OrderItem'
+        boutiqueshop.PlaceOrderRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                userCurrency:
+                    type: string
+                address:
+                    $ref: '#/components/schemas/boutiqueshop.Address'
+                email:
+                    type: string
+                creditCard:
+                    $ref: '#/components/schemas/boutiqueshop.CreditCardInfo'
+        boutiqueshop.PlaceOrderResponse:
+            type: object
+            properties:
+                order:
+                    $ref: '#/components/schemas/boutiqueshop.OrderResult'
+tags:
+    - name: Checkout

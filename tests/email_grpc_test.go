@@ -16,7 +16,7 @@ func TestGrpcSendEmail(t *testing.T) {
 		msg string
 	}
 
-	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint("127.0.0.1:9000"))
+	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint("127.0.0.1:9001"))
 	assert.NoError(t, err)
 
 	email := api.NewEmailClient(conn)

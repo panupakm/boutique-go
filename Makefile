@@ -42,6 +42,7 @@ run-all:
 	find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) tmux'
 	tmux attach-session -t $(SESSION_NAME)
 
-mail:
-	docker-compose -f deploy/docker-compose/docker-compose.yaml up
+.PHONY: tests
+tests:
+	go test ./tests/...
 

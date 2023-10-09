@@ -8,6 +8,7 @@ import (
 	spb "github.com/panupakm/boutique-go/api/shared"
 	"github.com/panupakm/boutique-go/app/catalog/internal/biz"
 	"github.com/panupakm/boutique-go/pkg/boutique"
+	"github.com/panupakm/boutique-go/pkg/boutique/money"
 )
 
 type CatalogService struct {
@@ -34,7 +35,7 @@ func ToProductProto(in *boutique.Product, out *pb.Product) {
 	out.Categories = in.Categories
 }
 
-func ToMoneyProto(in *boutique.Money, out *spb.Money) {
+func ToMoneyProto(in *money.Money, out *spb.Money) {
 	in.CurrencyCode = out.CurrencyCode
 	in.Nanos = out.Nanos
 	in.Units = out.Units

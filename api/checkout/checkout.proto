@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package boutiqueshop;
+
+import "google/api/annotations.proto";
+import "shared/shared.proto";
+
+option go_package = "github.com/panupakm/boutique-go/api/checkout;checkout";
+option java_multiple_files = true;
+option java_package = "api.checkout";
+
+service Checkout {
+	rpc PlaceOrder (PlaceOrderRequest) returns (PlaceOrderResponse) {
+		option (google.api.http) = {
+			post: "/checkout"
+			body: "*"
+		};
+	}
+}
+
+message PlaceOrderRequest {
+	string user_id = 1;
+	string user_currency = 2;
+	Address address = 3;
+	string email = 4;
+	CreditCardInfo credit_card = 5;
+
+}
+message PlaceOrderResponse {
+	OrderResult order = 1;
+}

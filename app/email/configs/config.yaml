@@ -12,7 +12,7 @@ data:
     from: boutique@example.com
     username: admin
     password: admin
-    templateDir: ./app/email/templates
+    templateDir: ./templates
   orderConfirmMail:
     subject: Order confirmation
     templateName: confirmation.html
