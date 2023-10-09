@@ -1,6 +1,7 @@
 package boutique
 
 import (
+	"github.com/panupakm/boutique-go/pkg/cart"
 	"github.com/panupakm/boutique-go/pkg/money"
 )
 
@@ -13,6 +14,6 @@ type OrderResult struct {
 }
 
 type OrderItem struct {
-	Item CartItem    `json:"item"`
-	Cost money.Money `json:"cost"`
+	Item cart.CartItem `json:"item"`
+	Cost money.Money   `json:"cost"`
 }

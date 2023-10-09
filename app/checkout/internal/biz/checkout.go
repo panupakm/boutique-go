@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/panupakm/boutique-go/pkg/boutique"
+	"github.com/panupakm/boutique-go/pkg/cart"
 	"github.com/panupakm/boutique-go/pkg/money"
 )
 
@@ -30,24 +31,24 @@ func (cu *CheckoutUseCase) PlaceOrder(ctx context.Context, userId string) (res b
 	if err != nil {
 		return
 	}
-	cart, err := cu.cuc.GetCart(ctx, userId)
+	c, err := cu.cuc.GetCart(ctx, userId)
 	if err != nil {
 		return
 	}
-	if len(cart.Items) == 0 {
+	if len(c.Items) == 0 {
 		err = fmt.Errorf("No cart for user %s", userId)
 		return
 	}
 
-	orderItems := make([]boutique.OrderItem, len(cart.Items))
-	for i, item := range cart.Items {
+	orderItems := make([]boutique.OrderItem, len(c.Items))
+	for i, item := range c.Items {
 		prod, err1 := cu.cluc.GetProduct(ctx, item.ProductId)
 		if err1 != nil {
 			err = err1
 			return
 		}
 		orderItems[i] = boutique.OrderItem{
-			Item: boutique.CartItem{
+			Item: cart.CartItem{
 				ProductId: prod.Id,
 				Quantity:  item.Quantity,
 			},

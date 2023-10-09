@@ -5,11 +5,11 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 
-	"github.com/panupakm/boutique-go/pkg/boutique"
+	"github.com/panupakm/boutique-go/pkg/cart"
 )
 
 type CartRepo interface {
-	GetCart(ctx context.Context, userId string) (boutique.Cart, error)
+	GetCart(ctx context.Context, userId string) (cart.Cart, error)
 	EmptyCart(ctx context.Context, userId string) error
 }
 
@@ -22,7 +22,7 @@ func NewCartUseCase(repo CartRepo, logger log.Logger) *CartUseCase {
 	return &CartUseCase{repo: repo, log: log.NewHelper(log.With(logger, "module", "cart/usercase"))}
 }
 
-func (cu *CartUseCase) GetCart(ctx context.Context, id string) (boutique.Cart, error) {
+func (cu *CartUseCase) GetCart(ctx context.Context, id string) (cart.Cart, error) {
 	return cu.repo.GetCart(ctx, id)
 }
 
