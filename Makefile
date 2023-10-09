@@ -1,3 +1,5 @@
+SESSION_NAME=run-boutique
+
 .PHONY: api
 # generate api
 api:
@@ -32,5 +34,14 @@ all:
 build:
 	find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) build'
 
+run-all:
+	@echo ">>> Starting Boutique Services"
+	tmux start-server
+	tmux kill-session -t $(SESSION_NAME) || true
+	tmux new-session -d -s $(SESSION_NAME) "echo -n 'Press enter to kill all servers: '; read&& tmux kill-session -t $(SESSION)"
+	find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) tmux'
+	tmux attach-session -t $(SESSION_NAME)
+
 mail:
 	docker-compose -f deploy/docker-compose/docker-compose.yaml up
+

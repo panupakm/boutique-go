@@ -1,6 +1,9 @@
 GOHOSTOS:=$(shell go env GOHOSTOS)
 GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
+TIME_START:=$(shell date +%s)
+SESSION_NAME=run-boutique
+TMUX_NAME := $(shell pwd | sed 's\#.*/\#\#')
 
 ifeq ($(GOHOSTOS), windows)
 	#the `find.exe` is different from `find` in bash/shell.
@@ -15,6 +18,7 @@ else
 	APP_RELATIVE_PATH=$(shell a=`basename $$PWD` && cd .. && echo $$a)
 	API_PROTO_FILES=$(shell cd ../../api && find . -name *.proto | grep $(APP_RELATIVE_PATH) | sed 's|^\.\/||')
 endif
+
 
 .PHONY: init
 # init env
@@ -64,6 +68,15 @@ all:
 	make api;
 	make config;
 	make generate;
+
+
+.PHONY: tmux
+tmux:
+	tmux new-window -d -t $(SESSION_NAME) -n $(TMUX_NAME) "bash -c '\
+	air; \
+	echo Process exited with \$?; \
+	read\
+	'"     
 
 # show help
 help:
