@@ -1,37 +1,39 @@
 package cart
 
 import (
-	cartApi "github.com/panupakm/boutique-go/api/cart"
+	shared "github.com/panupakm/boutique-go/api/shared"
 )
 
 type CartItem struct {
-	ProductId string `json:"product_id"`
-	Quantity  int32  `json:"quantity"`
+	ProductId string `bson:"product_id" json:"product_id"`
+	Quantity  int32  `bson:"quantity" json:"quantity"`
 }
 
 type Cart struct {
-	UserId string     `json:"user_id"`
-	Items  []CartItem `json:"items,omitempty"`
+	UserId string     `bson:"user_id" json:"user_id"`
+	Items  []CartItem `bson:"items,omitempty" json:"items,omitempty"`
 }
 
-func ToBiz(pb *cartApi.Cart, biz *Cart) {
-	biz.UserId = pb.UserId
-	biz.Items = make([]CartItem, len(pb.Items))
-	for i, item := range pb.Items {
-		biz.Items[i] = CartItem{
+func ToCartBiz(in *shared.Cart, out *Cart) {
+	out.UserId = in.UserId
+	out.Items = make([]CartItem, len(in.Items))
+	for i, item := range in.Items {
+		out.Items[i] = CartItem{
 			ProductId: item.ProductId,
 			Quantity:  item.Quantity,
 		}
 	}
 }
 
-func ToProto(biz *Cart, pb *cartApi.Cart) {
-	pb.UserId = biz.UserId
-	pb.Items = make([]*cartApi.CartItem, len(biz.Items))
-	for i, item := range biz.Items {
-		pb.Items[i] = &cartApi.CartItem{
-			ProductId: item.ProductId,
-			Quantity:  item.Quantity,
-		}
+func ToCartProto(in *Cart, out *shared.Cart) {
+	out.UserId = in.UserId
+	out.Items = make([]*shared.CartItem, len(in.Items))
+	for i, item := range in.Items {
+		ToCartItemProto(&item, out.Items[i])
 	}
+}
+
+func ToCartItemProto(in *CartItem, out *shared.CartItem) {
+	out.ProductId = in.ProductId
+	out.Quantity = in.Quantity
 }

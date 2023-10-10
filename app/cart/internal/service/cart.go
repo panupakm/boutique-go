@@ -6,6 +6,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 
 	pb "github.com/panupakm/boutique-go/api/cart"
+	spb "github.com/panupakm/boutique-go/api/shared"
 	"github.com/panupakm/boutique-go/app/cart/internal/biz"
 )
 
@@ -23,7 +24,7 @@ func NewCartServiceService(uc *biz.CartUsecase, logger log.Logger) *CartServiceS
 	}
 }
 
-func (s *CartServiceService) AddItem(ctx context.Context, req *pb.AddItemRequest) (*pb.Empty, error) {
+func (s *CartServiceService) AddItem(ctx context.Context, req *pb.AddItemRequest) (*spb.Empty, error) {
 	err := s.uc.AddItem(ctx, req.UserId, &biz.CartItem{
 		ProductId: req.Item.GetProductId(),
 		Quantity:  req.Item.GetQuantity(),
@@ -31,22 +32,22 @@ func (s *CartServiceService) AddItem(ctx context.Context, req *pb.AddItemRequest
 	if err != nil {
 		s.log.Errorf("AddItem: %w", err)
 	}
-	return &pb.Empty{}, err
+	return &spb.Empty{}, err
 }
 
-func (s *CartServiceService) GetCart(ctx context.Context, req *pb.GetCartRequest) (*pb.Cart, error) {
+func (s *CartServiceService) GetCart(ctx context.Context, req *pb.GetCartRequest) (*spb.Cart, error) {
 	cart, err := s.uc.GetCart(ctx, req.UserId)
 	if err != nil {
 		s.log.Errorf("GetCart: %w", err)
 	}
 
-	var returnCart = pb.Cart{
-		Items:  make([]*pb.CartItem, 0),
+	var returnCart = spb.Cart{
+		Items:  make([]*spb.CartItem, 0),
 		UserId: cart.UserId,
 	}
 
 	for _, item := range cart.Items {
-		returnCart.Items = append(returnCart.Items, &pb.CartItem{
+		returnCart.Items = append(returnCart.Items, &spb.CartItem{
 			ProductId: item.ProductId,
 			Quantity:  item.Quantity,
 		})
@@ -55,7 +56,7 @@ func (s *CartServiceService) GetCart(ctx context.Context, req *pb.GetCartRequest
 	return &returnCart, nil
 }
 
-func (s *CartServiceService) EmptyCart(ctx context.Context, req *pb.EmptyCartRequest) (*pb.Empty, error) {
+func (s *CartServiceService) EmptyCart(ctx context.Context, req *pb.EmptyCartRequest) (*spb.Empty, error) {
 	err := s.uc.Empty(ctx, req.UserId)
-	return &pb.Empty{}, err
+	return &spb.Empty{}, err
 }

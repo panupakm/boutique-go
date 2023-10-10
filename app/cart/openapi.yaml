@@ -22,7 +22,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/cart.service.Cart'
+                                $ref: '#/components/schemas/boutiqueshop.Cart'
         post:
             tags:
                 - CartService
@@ -31,7 +31,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/cart.service.AddItemRequest'
+                            $ref: '#/components/schemas/boutiqueshop.AddItemRequest'
                 required: true
             responses:
                 "200":
@@ -39,7 +39,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/cart.service.Empty'
+                                $ref: '#/components/schemas/boutiqueshop.Empty'
         delete:
             tags:
                 - CartService
@@ -55,17 +55,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/cart.service.Empty'
+                                $ref: '#/components/schemas/boutiqueshop.Empty'
 components:
     schemas:
-        cart.service.AddItemRequest:
+        boutiqueshop.AddItemRequest:
             type: object
             properties:
                 userId:
                     type: string
                 item:
-                    $ref: '#/components/schemas/cart.service.CartItem'
-        cart.service.Cart:
+                    $ref: '#/components/schemas/boutiqueshop.CartItem'
+        boutiqueshop.Cart:
             type: object
             properties:
                 userId:
@@ -73,8 +73,8 @@ components:
                 items:
                     type: array
                     items:
-                        $ref: '#/components/schemas/cart.service.CartItem'
-        cart.service.CartItem:
+                        $ref: '#/components/schemas/boutiqueshop.CartItem'
+        boutiqueshop.CartItem:
             type: object
             properties:
                 productId:
@@ -82,7 +82,7 @@ components:
                 quantity:
                     type: integer
                     format: int32
-        cart.service.Empty:
+        boutiqueshop.Empty:
             type: object
             properties: {}
 tags:

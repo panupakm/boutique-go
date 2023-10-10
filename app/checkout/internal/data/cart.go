@@ -33,7 +33,7 @@ func (r *cartRepo) GetCart(ctx context.Context, userId string) (cart.Cart, error
 	}
 
 	var bizCart = cart.Cart{}
-	cart.ToBiz(pbc, &bizCart)
+	cart.ToCartBiz(pbc, &bizCart)
 	return bizCart, nil
 }
 

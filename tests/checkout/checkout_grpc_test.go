@@ -51,7 +51,7 @@ func TestGrpcCheckout(t *testing.T) {
 		prices[i] = p.PriceUsd
 		req := cartapi.AddItemRequest{
 			UserId: userId,
-			Item: &cartapi.CartItem{
+			Item: &shared.CartItem{
 				ProductId: p.Id,
 				Quantity:  quantities[i],
 			},
@@ -82,5 +82,12 @@ func TestGrpcCheckout(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, pores)
 	require.NotNil(t, pores.Order.OrderId)
+	require.NotNil(t, pores.Order.ShippingAddress)
+	require.NotNil(t, pores.Order.ShippingCost)
+	require.NotNil(t, pores.Order.ShippingTrackingId)
 	require.Equal(t, n, len(pores.Order.Items))
+	for _, item := range pores.Order.Items {
+		require.NotEmpty(t, item.Item.ProductId)
+		require.NotZero(t, item.Item.Quantity)
+	}
 }

@@ -22,6 +22,7 @@ package cart
 
 import (
 	context "context"
+	shared "github.com/panupakm/boutique-go/api/shared"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -33,18 +34,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	CartService_AddItem_FullMethodName   = "/cart.service.CartService/AddItem"
-	CartService_GetCart_FullMethodName   = "/cart.service.CartService/GetCart"
-	CartService_EmptyCart_FullMethodName = "/cart.service.CartService/EmptyCart"
+	CartService_AddItem_FullMethodName   = "/boutiqueshop.CartService/AddItem"
+	CartService_GetCart_FullMethodName   = "/boutiqueshop.CartService/GetCart"
+	CartService_EmptyCart_FullMethodName = "/boutiqueshop.CartService/EmptyCart"
 )
 
 // CartServiceClient is the client API for CartService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CartServiceClient interface {
-	AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*Empty, error)
-	GetCart(ctx context.Context, in *GetCartRequest, opts ...grpc.CallOption) (*Cart, error)
-	EmptyCart(ctx context.Context, in *EmptyCartRequest, opts ...grpc.CallOption) (*Empty, error)
+	AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*shared.Empty, error)
+	GetCart(ctx context.Context, in *GetCartRequest, opts ...grpc.CallOption) (*shared.Cart, error)
+	EmptyCart(ctx context.Context, in *EmptyCartRequest, opts ...grpc.CallOption) (*shared.Empty, error)
 }
 
 type cartServiceClient struct {
@@ -55,8 +56,8 @@ func NewCartServiceClient(cc grpc.ClientConnInterface) CartServiceClient {
 	return &cartServiceClient{cc}
 }
 
-func (c *cartServiceClient) AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *cartServiceClient) AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*shared.Empty, error) {
+	out := new(shared.Empty)
 	err := c.cc.Invoke(ctx, CartService_AddItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -64,8 +65,8 @@ func (c *cartServiceClient) AddItem(ctx context.Context, in *AddItemRequest, opt
 	return out, nil
 }
 
-func (c *cartServiceClient) GetCart(ctx context.Context, in *GetCartRequest, opts ...grpc.CallOption) (*Cart, error) {
-	out := new(Cart)
+func (c *cartServiceClient) GetCart(ctx context.Context, in *GetCartRequest, opts ...grpc.CallOption) (*shared.Cart, error) {
+	out := new(shared.Cart)
 	err := c.cc.Invoke(ctx, CartService_GetCart_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -73,8 +74,8 @@ func (c *cartServiceClient) GetCart(ctx context.Context, in *GetCartRequest, opt
 	return out, nil
 }
 
-func (c *cartServiceClient) EmptyCart(ctx context.Context, in *EmptyCartRequest, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *cartServiceClient) EmptyCart(ctx context.Context, in *EmptyCartRequest, opts ...grpc.CallOption) (*shared.Empty, error) {
+	out := new(shared.Empty)
 	err := c.cc.Invoke(ctx, CartService_EmptyCart_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -86,9 +87,9 @@ func (c *cartServiceClient) EmptyCart(ctx context.Context, in *EmptyCartRequest,
 // All implementations must embed UnimplementedCartServiceServer
 // for forward compatibility
 type CartServiceServer interface {
-	AddItem(context.Context, *AddItemRequest) (*Empty, error)
-	GetCart(context.Context, *GetCartRequest) (*Cart, error)
-	EmptyCart(context.Context, *EmptyCartRequest) (*Empty, error)
+	AddItem(context.Context, *AddItemRequest) (*shared.Empty, error)
+	GetCart(context.Context, *GetCartRequest) (*shared.Cart, error)
+	EmptyCart(context.Context, *EmptyCartRequest) (*shared.Empty, error)
 	mustEmbedUnimplementedCartServiceServer()
 }
 
@@ -96,13 +97,13 @@ type CartServiceServer interface {
 type UnimplementedCartServiceServer struct {
 }
 
-func (UnimplementedCartServiceServer) AddItem(context.Context, *AddItemRequest) (*Empty, error) {
+func (UnimplementedCartServiceServer) AddItem(context.Context, *AddItemRequest) (*shared.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddItem not implemented")
 }
-func (UnimplementedCartServiceServer) GetCart(context.Context, *GetCartRequest) (*Cart, error) {
+func (UnimplementedCartServiceServer) GetCart(context.Context, *GetCartRequest) (*shared.Cart, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCart not implemented")
 }
-func (UnimplementedCartServiceServer) EmptyCart(context.Context, *EmptyCartRequest) (*Empty, error) {
+func (UnimplementedCartServiceServer) EmptyCart(context.Context, *EmptyCartRequest) (*shared.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EmptyCart not implemented")
 }
 func (UnimplementedCartServiceServer) mustEmbedUnimplementedCartServiceServer() {}
@@ -176,7 +177,7 @@ func _CartService_EmptyCart_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CartService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "cart.service.CartService",
+	ServiceName: "boutiqueshop.CartService",
 	HandlerType: (*CartServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

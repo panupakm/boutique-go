@@ -45,4 +45,3 @@ run-all:
 .PHONY: tests
 tests:
 	go test ./tests/...
-

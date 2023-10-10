@@ -7,6 +7,7 @@ import (
 	pb "github.com/panupakm/boutique-go/api/checkout"
 	spb "github.com/panupakm/boutique-go/api/shared"
 	"github.com/panupakm/boutique-go/app/checkout/internal/biz"
+	"github.com/panupakm/boutique-go/pkg/order"
 )
 
 type CheckoutService struct {
@@ -30,24 +31,9 @@ func (s *CheckoutService) PlaceOrder(ctx context.Context, req *pb.PlaceOrderRequ
 		return nil, err
 	}
 
-	resOrderResult := spb.OrderResult{
-		OrderId:            orderResult.OrderId,
-		ShippingTrackingId: orderResult.ShippingTrackingId,
-		ShippingCost: &spb.Money{
-			CurrencyCode: orderResult.ShippingCost.CurrencyCode,
-			Units:        orderResult.ShippingCost.Units,
-			Nanos:        orderResult.ShippingCost.Nanos,
-		},
-		ShippingAddress: &spb.Address{
-			StreetAddress: orderResult.ShippingAddress.StreetAddress,
-			City:          orderResult.ShippingAddress.City,
-			State:         orderResult.ShippingAddress.State,
-			Country:       orderResult.ShippingAddress.Country,
-			ZipCode:       orderResult.ShippingAddress.ZipCode,
-		},
-	}
-
+	outOrder := spb.OrderResult{}
+	order.ToProtoResult(&orderResult, &outOrder)
 	return &pb.PlaceOrderResponse{
-		Order: &resOrderResult,
+		Order: &outOrder,
 	}, nil
 }

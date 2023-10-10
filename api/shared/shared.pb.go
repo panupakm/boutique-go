@@ -518,6 +518,61 @@ func (x *Product) GetCategories() []string {
 	return nil
 }
 
+type Cart struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId string      `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Items  []*CartItem `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`
+}
+
+func (x *Cart) Reset() {
+	*x = Cart{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_shared_shared_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Cart) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Cart) ProtoMessage() {}
+
+func (x *Cart) ProtoReflect() protoreflect.Message {
+	mi := &file_shared_shared_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Cart.ProtoReflect.Descriptor instead.
+func (*Cart) Descriptor() ([]byte, []int) {
+	return file_shared_shared_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *Cart) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *Cart) GetItems() []*CartItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 type Empty struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -527,7 +582,7 @@ type Empty struct {
 func (x *Empty) Reset() {
 	*x = Empty{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_shared_shared_proto_msgTypes[7]
+		mi := &file_shared_shared_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -540,7 +595,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_shared_shared_proto_msgTypes[7]
+	mi := &file_shared_shared_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -553,7 +608,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_shared_shared_proto_rawDescGZIP(), []int{7}
+	return file_shared_shared_proto_rawDescGZIP(), []int{8}
 }
 
 var File_shared_shared_proto protoreflect.FileDescriptor
@@ -629,11 +684,16 @@ var file_shared_shared_proto_rawDesc = []byte{
 	0x71, 0x75, 0x65, 0x73, 0x68, 0x6f, 0x70, 0x2e, 0x4d, 0x6f, 0x6e, 0x65, 0x79, 0x52, 0x08, 0x70,
 	0x72, 0x69, 0x63, 0x65, 0x55, 0x73, 0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x61, 0x74, 0x65, 0x67,
 	0x6f, 0x72, 0x69, 0x65, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0a, 0x63, 0x61, 0x74,
-	0x65, 0x67, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79,
-	0x42, 0x33, 0x5a, 0x31, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70,
-	0x61, 0x6e, 0x75, 0x70, 0x61, 0x6b, 0x6d, 0x2f, 0x62, 0x6f, 0x75, 0x74, 0x69, 0x71, 0x75, 0x65,
-	0x2d, 0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x3b, 0x73,
-	0x68, 0x61, 0x72, 0x65, 0x64, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x67, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x22, 0x4d, 0x0a, 0x04, 0x43, 0x61, 0x72, 0x74, 0x12,
+	0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x2c, 0x0a, 0x05, 0x69, 0x74, 0x65, 0x6d,
+	0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x62, 0x6f, 0x75, 0x74, 0x69, 0x71,
+	0x75, 0x65, 0x73, 0x68, 0x6f, 0x70, 0x2e, 0x43, 0x61, 0x72, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x52,
+	0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42,
+	0x33, 0x5a, 0x31, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x70, 0x61,
+	0x6e, 0x75, 0x70, 0x61, 0x6b, 0x6d, 0x2f, 0x62, 0x6f, 0x75, 0x74, 0x69, 0x71, 0x75, 0x65, 0x2d,
+	0x67, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x3b, 0x73, 0x68,
+	0x61, 0x72, 0x65, 0x64, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -648,7 +708,7 @@ func file_shared_shared_proto_rawDescGZIP() []byte {
 	return file_shared_shared_proto_rawDescData
 }
 
-var file_shared_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_shared_shared_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_shared_shared_proto_goTypes = []interface{}{
 	(*Money)(nil),          // 0: boutiqueshop.Money
 	(*Address)(nil),        // 1: boutiqueshop.Address
@@ -657,7 +717,8 @@ var file_shared_shared_proto_goTypes = []interface{}{
 	(*OrderResult)(nil),    // 4: boutiqueshop.OrderResult
 	(*OrderItem)(nil),      // 5: boutiqueshop.OrderItem
 	(*Product)(nil),        // 6: boutiqueshop.Product
-	(*Empty)(nil),          // 7: boutiqueshop.Empty
+	(*Cart)(nil),           // 7: boutiqueshop.Cart
+	(*Empty)(nil),          // 8: boutiqueshop.Empty
 }
 var file_shared_shared_proto_depIdxs = []int32{
 	0, // 0: boutiqueshop.OrderResult.shipping_cost:type_name -> boutiqueshop.Money
@@ -666,11 +727,12 @@ var file_shared_shared_proto_depIdxs = []int32{
 	2, // 3: boutiqueshop.OrderItem.item:type_name -> boutiqueshop.CartItem
 	0, // 4: boutiqueshop.OrderItem.cost:type_name -> boutiqueshop.Money
 	0, // 5: boutiqueshop.Product.price_usd:type_name -> boutiqueshop.Money
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	2, // 6: boutiqueshop.Cart.items:type_name -> boutiqueshop.CartItem
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_shared_shared_proto_init() }
@@ -764,6 +826,18 @@ func file_shared_shared_proto_init() {
 			}
 		}
 		file_shared_shared_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Cart); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_shared_shared_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Empty); i {
 			case 0:
 				return &v.state
@@ -782,7 +856,7 @@ func file_shared_shared_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_shared_shared_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

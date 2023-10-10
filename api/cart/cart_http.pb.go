@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	shared "github.com/panupakm/boutique-go/api/shared"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,14 +20,14 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationCartServiceAddItem = "/cart.service.CartService/AddItem"
-const OperationCartServiceEmptyCart = "/cart.service.CartService/EmptyCart"
-const OperationCartServiceGetCart = "/cart.service.CartService/GetCart"
+const OperationCartServiceAddItem = "/boutiqueshop.CartService/AddItem"
+const OperationCartServiceEmptyCart = "/boutiqueshop.CartService/EmptyCart"
+const OperationCartServiceGetCart = "/boutiqueshop.CartService/GetCart"
 
 type CartServiceHTTPServer interface {
-	AddItem(context.Context, *AddItemRequest) (*Empty, error)
-	EmptyCart(context.Context, *EmptyCartRequest) (*Empty, error)
-	GetCart(context.Context, *GetCartRequest) (*Cart, error)
+	AddItem(context.Context, *AddItemRequest) (*shared.Empty, error)
+	EmptyCart(context.Context, *EmptyCartRequest) (*shared.Empty, error)
+	GetCart(context.Context, *GetCartRequest) (*shared.Cart, error)
 }
 
 func RegisterCartServiceHTTPServer(s *http.Server, srv CartServiceHTTPServer) {
@@ -53,7 +54,7 @@ func _CartService_AddItem0_HTTP_Handler(srv CartServiceHTTPServer) func(ctx http
 		if err != nil {
 			return err
 		}
-		reply := out.(*Empty)
+		reply := out.(*shared.Empty)
 		return ctx.Result(200, reply)
 	}
 }
@@ -72,7 +73,7 @@ func _CartService_GetCart0_HTTP_Handler(srv CartServiceHTTPServer) func(ctx http
 		if err != nil {
 			return err
 		}
-		reply := out.(*Cart)
+		reply := out.(*shared.Cart)
 		return ctx.Result(200, reply)
 	}
 }
@@ -91,15 +92,15 @@ func _CartService_EmptyCart0_HTTP_Handler(srv CartServiceHTTPServer) func(ctx ht
 		if err != nil {
 			return err
 		}
-		reply := out.(*Empty)
+		reply := out.(*shared.Empty)
 		return ctx.Result(200, reply)
 	}
 }
 
 type CartServiceHTTPClient interface {
-	AddItem(ctx context.Context, req *AddItemRequest, opts ...http.CallOption) (rsp *Empty, err error)
-	EmptyCart(ctx context.Context, req *EmptyCartRequest, opts ...http.CallOption) (rsp *Empty, err error)
-	GetCart(ctx context.Context, req *GetCartRequest, opts ...http.CallOption) (rsp *Cart, err error)
+	AddItem(ctx context.Context, req *AddItemRequest, opts ...http.CallOption) (rsp *shared.Empty, err error)
+	EmptyCart(ctx context.Context, req *EmptyCartRequest, opts ...http.CallOption) (rsp *shared.Empty, err error)
+	GetCart(ctx context.Context, req *GetCartRequest, opts ...http.CallOption) (rsp *shared.Cart, err error)
 }
 
 type CartServiceHTTPClientImpl struct {
@@ -110,8 +111,8 @@ func NewCartServiceHTTPClient(client *http.Client) CartServiceHTTPClient {
 	return &CartServiceHTTPClientImpl{client}
 }
 
-func (c *CartServiceHTTPClientImpl) AddItem(ctx context.Context, in *AddItemRequest, opts ...http.CallOption) (*Empty, error) {
-	var out Empty
+func (c *CartServiceHTTPClientImpl) AddItem(ctx context.Context, in *AddItemRequest, opts ...http.CallOption) (*shared.Empty, error) {
+	var out shared.Empty
 	pattern := "/cart"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationCartServiceAddItem))
@@ -123,8 +124,8 @@ func (c *CartServiceHTTPClientImpl) AddItem(ctx context.Context, in *AddItemRequ
 	return &out, err
 }
 
-func (c *CartServiceHTTPClientImpl) EmptyCart(ctx context.Context, in *EmptyCartRequest, opts ...http.CallOption) (*Empty, error) {
-	var out Empty
+func (c *CartServiceHTTPClientImpl) EmptyCart(ctx context.Context, in *EmptyCartRequest, opts ...http.CallOption) (*shared.Empty, error) {
+	var out shared.Empty
 	pattern := "/cart"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCartServiceEmptyCart))
@@ -136,8 +137,8 @@ func (c *CartServiceHTTPClientImpl) EmptyCart(ctx context.Context, in *EmptyCart
 	return &out, err
 }
 
-func (c *CartServiceHTTPClientImpl) GetCart(ctx context.Context, in *GetCartRequest, opts ...http.CallOption) (*Cart, error) {
-	var out Cart
+func (c *CartServiceHTTPClientImpl) GetCart(ctx context.Context, in *GetCartRequest, opts ...http.CallOption) (*shared.Cart, error) {
+	var out shared.Cart
 	pattern := "/cart"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCartServiceGetCart))

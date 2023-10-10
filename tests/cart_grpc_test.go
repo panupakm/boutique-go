@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	api "github.com/panupakm/boutique-go/api/cart"
+	"github.com/panupakm/boutique-go/api/shared"
 )
 
 func TestGrpcAddItem(t *testing.T) {
@@ -25,7 +26,7 @@ func TestGrpcAddItem(t *testing.T) {
 	userId := fmt.Sprintf("user_id_%d", time.Now().UnixMilli())
 	request := api.AddItemRequest{
 		UserId: userId,
-		Item: &api.CartItem{
+		Item: &shared.CartItem{
 			ProductId: "product_id_1",
 			Quantity:  1,
 		},
@@ -59,7 +60,7 @@ func TestGrpcEmptyCart(t *testing.T) {
 	userId := fmt.Sprintf("user_id_%d", time.Now().UnixMilli())
 	request := api.AddItemRequest{
 		UserId: userId,
-		Item: &api.CartItem{
+		Item: &shared.CartItem{
 			ProductId: "product_id_3",
 			Quantity:  1,
 		},
