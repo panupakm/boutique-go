@@ -66,12 +66,14 @@ func (r *productRepo) Query(ctx context.Context, q string, pageSize int, pageTok
 
 func (r *productRepo) GetProduct(ctx context.Context, id string) (product.Product, error) {
 	prod := product.Product{}
+	var prodJson bson.M
+
+	r.productColl.FindOne(ctx, bson.M{"id": id}).Decode(&prodJson)
 	if err := r.productColl.FindOne(ctx, bson.M{"id": id}).Decode(&prod); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return product.Product{}, nil
 		}
 		return product.Product{}, err
 	}
-
 	return prod, nil
 }

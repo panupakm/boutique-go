@@ -102,7 +102,9 @@ components:
                 shippingAddress:
                     $ref: '#/components/schemas/boutiqueshop.Address'
                 items:
-                    $ref: '#/components/schemas/boutiqueshop.OrderItem'
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/boutiqueshop.OrderItem'
         boutiqueshop.PlaceOrderRequest:
             type: object
             properties:

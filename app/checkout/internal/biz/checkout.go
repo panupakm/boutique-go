@@ -57,7 +57,7 @@ func (cu *CheckoutUseCase) PlaceOrder(ctx context.Context, userId string) (res b
 	}
 
 	total := money.Money{
-		CurrencyCode: "USD",
+		CurrencyCode: "THB",
 		Units:        0,
 		Nanos:        0,
 	}

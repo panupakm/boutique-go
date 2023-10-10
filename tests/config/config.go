@@ -1,14 +1,21 @@
 package config
 
 type MongoConfig struct {
-	Uri      string `json:"uri"`
-	Database string `json:"database"`
+	Uri       string   `json:"uri"`
+	Databases []string `json:"databases"`
 }
 
-type CatalogConfig struct {
-	Mongodb MongoConfig
+type ClientConfig struct {
+	GrpcUri       string `json:"grpc_uri"`
+	HttpUri       string `json:"http_uri"`
+	MongoDatabase string `json:"mongo_database"`
+}
+
+type CheckoutConfig struct {
+	Uri string `json:"uri"`
 }
 
 type TestConfig struct {
-	Catalog CatalogConfig
+	MongoDb MongoConfig             `json:"mongodb"`
+	Clients map[string]ClientConfig `json:"clients"`
 }

@@ -7,12 +7,12 @@ import (
 
 // Product is a Product model.
 type Product struct {
-	Id          string      `json:"id,omitempty"`
-	Name        string      `json:"name,omitempty"`
-	Description string      `json:"description,omitempty"`
-	Picture     string      `json:"picture,omitempty"`
-	PriceUsd    money.Money `json:"price,omitempty"`
-	Categories  []string    `json:"categories,omitempty"`
+	Id          string      `bson:"id,omitempty" json:"id,omitempty"`
+	Name        string      `bson:"name,omitempty" json:"name,omitempty"`
+	Description string      `bson:"description,omitempty" json:"description,omitempty"`
+	Picture     string      `bson:"picture,omitempty" json:"picture,omitempty"`
+	PriceUsd    money.Money `bson:"price_usd,omitempty" json:"price_usd,omitempty"`
+	Categories  []string    `bson:"categories,omitempty" json:"categories,omitempty"`
 }
 
 func ToProto(in *Product, out *spb.Product) {
@@ -21,7 +21,7 @@ func ToProto(in *Product, out *spb.Product) {
 	out.Description = in.Description
 	out.Picture = in.Picture
 	out.PriceUsd = &spb.Money{}
-	// ToMoneyProto(&in.PriceUsd, out.PriceUsd)
+	money.ToProto(&in.PriceUsd, out.PriceUsd)
 	out.Categories = in.Categories
 }
 

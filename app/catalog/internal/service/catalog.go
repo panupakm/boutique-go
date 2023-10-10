@@ -7,8 +7,7 @@ import (
 	pb "github.com/panupakm/boutique-go/api/catalog"
 	spb "github.com/panupakm/boutique-go/api/shared"
 	"github.com/panupakm/boutique-go/app/catalog/internal/biz"
-	"github.com/panupakm/boutique-go/pkg/money"
-	"github.com/panupakm/boutique-go/pkg/product"
+	pkgproduct "github.com/panupakm/boutique-go/pkg/product"
 )
 
 type CatalogService struct {
@@ -23,22 +22,6 @@ func NewCatalogService(uc *biz.CatalogUsecase, logger log.Logger) *CatalogServic
 		uc:  uc,
 		log: log.NewHelper(log.With(logger, "module", "catalog/service")),
 	}
-}
-
-func ToProductProto(in *product.Product, out *spb.Product) {
-	out.Id = in.Id
-	out.Name = in.Name
-	out.Description = in.Description
-	out.Picture = in.Picture
-	out.PriceUsd = &spb.Money{}
-	ToMoneyProto(&in.PriceUsd, out.PriceUsd)
-	out.Categories = in.Categories
-}
-
-func ToMoneyProto(in *money.Money, out *spb.Money) {
-	in.CurrencyCode = out.CurrencyCode
-	in.Nanos = out.Nanos
-	in.Units = out.Units
 }
 
 func (s *CatalogService) ListProducts(ctx context.Context, req *pb.ListProductsRequest) (*pb.ListProductsResponse, error) {
@@ -68,9 +51,9 @@ func (s *CatalogService) GetProduct(ctx context.Context, req *pb.GetProductReque
 	if err != nil {
 		return nil, err
 	}
-
 	var res spb.Product
-	ToProductProto(&p, &res)
+	pkgproduct.ToProto(&p, &res)
+
 	return &res, nil
 }
 
@@ -86,7 +69,7 @@ func (s *CatalogService) SearchProducts(ctx context.Context, req *pb.SearchProdu
 	resProducts := make([]*spb.Product, 0, len(products))
 	for _, p := range products {
 		var res spb.Product
-		ToProductProto(&p, &res)
+		pkgproduct.ToProto(&p, &res)
 		resProducts = append(resProducts, &res)
 	}
 	return &pb.SearchProductsResponse{

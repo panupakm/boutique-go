@@ -1,8 +1,21 @@
 {
+  "mongodb": {
+    "uri": "mongodb://user:password@localhost:27017/catalog",
+    "databases": ["catalog"]
+  },
+  "clients": {
     "catalog": {
-        "mongodb": {
-            "uri": "mongodb://user:password@localhost:27017/catalog",
-            "database": "catalog"
-        }
+      "grpc_uri": "localhost:9003",
+      "http_uri": "http://localhost:8003",
+      "mongo_database": "catalog"
+    },
+    "checkout": {
+      "grpc_uri": "localhost:9004",
+      "http_uri": "http://localhost:8004"
+    },
+    "cart": {
+      "grpc_uri": "localhost:9002",
+      "http_uri": "http://localhost:8002"
     }
+  }
 }

@@ -47,7 +47,7 @@ message OrderResult {
     string shipping_tracking_id = 2;
     Money shipping_cost = 3;
     Address shipping_address = 4;
-    OrderItem items = 5;
+    repeated OrderItem items = 5;
 }
 
 message OrderItem {

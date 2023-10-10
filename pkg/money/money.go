@@ -32,9 +32,9 @@ var (
 )
 
 type Money struct {
-	CurrencyCode string `json:"currency_code"`
-	Units        int64  `json:"units"`
-	Nanos        int32  `json:"nanos"`
+	CurrencyCode string `bson:"currency_code" json:"currency_code"`
+	Units        int64  `bson:"units" json:"units"`
+	Nanos        int32  `bson:"nanos" json:"nanos"`
 }
 
 // IsValid checks if specified value has a valid units/nanos signs and ranges.
@@ -138,13 +138,13 @@ func MultiplySlow(m Money, n uint32) Money {
 }
 
 func ToProto(in *Money, out *spb.Money) {
-	in.CurrencyCode = out.CurrencyCode
-	in.Nanos = out.Nanos
-	in.Units = out.Units
+	out.CurrencyCode = in.CurrencyCode
+	out.Nanos = in.Nanos
+	out.Units = in.Units
 }
 
 func ToBiz(in *spb.Money, out *Money) {
-	in.CurrencyCode = out.CurrencyCode
-	in.Nanos = out.Nanos
-	in.Units = out.Units
+	out.CurrencyCode = in.CurrencyCode
+	out.Nanos = in.Nanos
+	out.Units = in.Units
 }
