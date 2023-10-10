@@ -1,0 +1,11 @@
+server:
+  http:
+    addr: 0.0.0.0:8005
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9005
+    timeout: 1s
+data:
+  database:
+    driver: postgres
+    source: host=127.0.0.1 port=5432 user=root dbname=user password=password sslmode=disable

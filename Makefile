@@ -24,6 +24,7 @@ config:
 generate:
 	find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) generate'
 
+
 .PHONY: all
 # all 
 all:

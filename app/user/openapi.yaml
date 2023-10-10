@@ -1,0 +1,157 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: User API
+    version: 0.0.1
+paths:
+    /user:
+        put:
+            tags:
+                - User
+            operationId: User_Save
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/boutiqueshop.SaveUserReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.SaveUserReply'
+        post:
+            tags:
+                - User
+            operationId: User_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/boutiqueshop.CreateUserReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.CreateUserReply'
+    /user/verify:
+        post:
+            tags:
+                - User
+            operationId: User_VerifyPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/boutiqueshop.VerifyPasswordReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.VerifyPasswordReply'
+    /user/{id}:
+        get:
+            tags:
+                - User
+            operationId: User_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.GetUserReply'
+    /user/{username}:
+        get:
+            tags:
+                - User
+            operationId: User_GetUserByUsername
+            parameters:
+                - name: username
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.GetUserByUsernameReply'
+components:
+    schemas:
+        boutiqueshop.CreateUserReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+        boutiqueshop.CreateUserReq:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        boutiqueshop.GetUserByUsernameReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+        boutiqueshop.GetUserReply:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+        boutiqueshop.SaveUserReply:
+            type: object
+            properties:
+                id:
+                    type: string
+        boutiqueshop.SaveUserReq:
+            type: object
+            properties:
+                id:
+                    type: string
+                username:
+                    type: string
+                password:
+                    type: string
+        boutiqueshop.VerifyPasswordReply:
+            type: object
+            properties:
+                ok:
+                    type: boolean
+                id:
+                    type: string
+        boutiqueshop.VerifyPasswordReq:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+tags:
+    - name: User
