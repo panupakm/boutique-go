@@ -8,9 +8,33 @@ import (
 )
 
 var (
+	// CardsColumns holds the columns for the "cards" table.
+	CardsColumns = []*schema.Column{
+		{Name: "oid", Type: field.TypeUUID, Unique: true},
+		{Name: "number", Type: field.TypeString, Size: 16},
+		{Name: "name", Type: field.TypeString, Size: 128},
+		{Name: "ccv", Type: field.TypeInt},
+		{Name: "expiration_year", Type: field.TypeInt},
+		{Name: "expiration_month", Type: field.TypeInt},
+		{Name: "user_cards", Type: field.TypeUUID, Nullable: true},
+	}
+	// CardsTable holds the schema information for the "cards" table.
+	CardsTable = &schema.Table{
+		Name:       "cards",
+		Columns:    CardsColumns,
+		PrimaryKey: []*schema.Column{CardsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "cards_users_cards",
+				Columns:    []*schema.Column{CardsColumns[6]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true},
+		{Name: "oid", Type: field.TypeUUID, Unique: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "email", Type: field.TypeString, Unique: true},
 		{Name: "password_hash", Type: field.TypeString},
@@ -23,9 +47,11 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		CardsTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	CardsTable.ForeignKeys[0].RefTable = UsersTable
 }

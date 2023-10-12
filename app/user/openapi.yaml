@@ -7,23 +7,6 @@ info:
     version: 0.0.1
 paths:
     /user:
-        put:
-            tags:
-                - User
-            operationId: User_Save
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/boutiqueshop.SaveUserReq'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/boutiqueshop.SaveUserReply'
         post:
             tags:
                 - User
@@ -41,24 +24,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/boutiqueshop.CreateUserReply'
-    /user/verify:
-        post:
-            tags:
-                - User
-            operationId: User_VerifyPassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/boutiqueshop.VerifyPasswordReq'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/boutiqueshop.VerifyPasswordReply'
     /user/{id}:
         get:
             tags:
@@ -77,6 +42,29 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/boutiqueshop.GetUserReply'
+        put:
+            tags:
+                - User
+            operationId: User_Save
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/boutiqueshop.SaveUserReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.SaveUserReply'
     /user/{username}:
         get:
             tags:
@@ -95,8 +83,114 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/boutiqueshop.GetUserByUsernameReply'
+    /users/verify:
+        post:
+            tags:
+                - User
+            operationId: User_VerifyPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/boutiqueshop.VerifyPasswordReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.VerifyPasswordReply'
+    /users/{userId}/card:
+        post:
+            tags:
+                - User
+            operationId: User_AddCard
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/boutiqueshop.AddCardReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.AddCardReply'
+    /users/{userId}/cards:
+        get:
+            tags:
+                - User
+            operationId: User_ListCards
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.ListCardsReply'
+    /users/{userId}/cards/{cardId}:
+        delete:
+            tags:
+                - User
+            operationId: User_DeleteCard
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: cardId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/boutiqueshop.DeleteCardReply'
 components:
     schemas:
+        boutiqueshop.AddCardReply:
+            type: object
+            properties:
+                cardId:
+                    type: string
+        boutiqueshop.AddCardReq:
+            type: object
+            properties:
+                userId:
+                    type: string
+                cardNumber:
+                    type: string
+                expirationYear:
+                    type: integer
+                    format: int32
+                expirationMonth:
+                    type: integer
+                    format: int32
+                ccv:
+                    type: integer
+                    format: int32
+                name:
+                    type: string
         boutiqueshop.CreateUserReply:
             type: object
             properties:
@@ -111,6 +205,25 @@ components:
                     type: string
                 password:
                     type: string
+                email:
+                    type: string
+        boutiqueshop.CreditCardInfo:
+            type: object
+            properties:
+                creditCardNumber:
+                    type: string
+                creditCardCvv:
+                    type: integer
+                    format: int32
+                creditCardExpirationYear:
+                    type: integer
+                    format: int32
+                creditCardExpirationMonth:
+                    type: integer
+                    format: int32
+        boutiqueshop.DeleteCardReply:
+            type: object
+            properties: {}
         boutiqueshop.GetUserByUsernameReply:
             type: object
             properties:
@@ -125,6 +238,13 @@ components:
                     type: string
                 username:
                     type: string
+        boutiqueshop.ListCardsReply:
+            type: object
+            properties:
+                cards:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/boutiqueshop.CreditCardInfo'
         boutiqueshop.SaveUserReply:
             type: object
             properties:

@@ -19,16 +19,22 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationUserAddCard = "/boutiqueshop.User/AddCard"
 const OperationUserCreateUser = "/boutiqueshop.User/CreateUser"
+const OperationUserDeleteCard = "/boutiqueshop.User/DeleteCard"
 const OperationUserGetUser = "/boutiqueshop.User/GetUser"
 const OperationUserGetUserByUsername = "/boutiqueshop.User/GetUserByUsername"
+const OperationUserListCards = "/boutiqueshop.User/ListCards"
 const OperationUserSave = "/boutiqueshop.User/Save"
 const OperationUserVerifyPassword = "/boutiqueshop.User/VerifyPassword"
 
 type UserHTTPServer interface {
+	AddCard(context.Context, *AddCardReq) (*AddCardReply, error)
 	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
+	DeleteCard(context.Context, *DeleteCardReq) (*DeleteCardReply, error)
 	GetUser(context.Context, *GetUserReq) (*GetUserReply, error)
 	GetUserByUsername(context.Context, *GetUserByUsernameReq) (*GetUserByUsernameReply, error)
+	ListCards(context.Context, *ListCardsReq) (*ListCardsReply, error)
 	Save(context.Context, *SaveUserReq) (*SaveUserReply, error)
 	VerifyPassword(context.Context, *VerifyPasswordReq) (*VerifyPasswordReply, error)
 }
@@ -37,9 +43,12 @@ func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r := s.Route("/")
 	r.GET("/user/{id}", _User_GetUser0_HTTP_Handler(srv))
 	r.GET("/user/{username}", _User_GetUserByUsername0_HTTP_Handler(srv))
-	r.PUT("/user", _User_Save0_HTTP_Handler(srv))
+	r.PUT("/user/{id}", _User_Save0_HTTP_Handler(srv))
 	r.POST("/user", _User_CreateUser0_HTTP_Handler(srv))
-	r.POST("/user/verify", _User_VerifyPassword0_HTTP_Handler(srv))
+	r.POST("/users/verify", _User_VerifyPassword0_HTTP_Handler(srv))
+	r.POST("/users/{user_id}/card", _User_AddCard0_HTTP_Handler(srv))
+	r.GET("/users/{user_id}/cards", _User_ListCards0_HTTP_Handler(srv))
+	r.DELETE("/users/{user_id}/cards/{card_id}", _User_DeleteCard0_HTTP_Handler(srv))
 }
 
 func _User_GetUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
@@ -93,6 +102,9 @@ func _User_Save0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationUserSave)
@@ -152,10 +164,82 @@ func _User_VerifyPassword0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Contex
 	}
 }
 
+func _User_AddCard0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AddCardReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserAddCard)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AddCard(ctx, req.(*AddCardReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*AddCardReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _User_ListCards0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListCardsReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserListCards)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListCards(ctx, req.(*ListCardsReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListCardsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _User_DeleteCard0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteCardReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserDeleteCard)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteCard(ctx, req.(*DeleteCardReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteCardReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UserHTTPClient interface {
+	AddCard(ctx context.Context, req *AddCardReq, opts ...http.CallOption) (rsp *AddCardReply, err error)
 	CreateUser(ctx context.Context, req *CreateUserReq, opts ...http.CallOption) (rsp *CreateUserReply, err error)
+	DeleteCard(ctx context.Context, req *DeleteCardReq, opts ...http.CallOption) (rsp *DeleteCardReply, err error)
 	GetUser(ctx context.Context, req *GetUserReq, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	GetUserByUsername(ctx context.Context, req *GetUserByUsernameReq, opts ...http.CallOption) (rsp *GetUserByUsernameReply, err error)
+	ListCards(ctx context.Context, req *ListCardsReq, opts ...http.CallOption) (rsp *ListCardsReply, err error)
 	Save(ctx context.Context, req *SaveUserReq, opts ...http.CallOption) (rsp *SaveUserReply, err error)
 	VerifyPassword(ctx context.Context, req *VerifyPasswordReq, opts ...http.CallOption) (rsp *VerifyPasswordReply, err error)
 }
@@ -168,6 +252,19 @@ func NewUserHTTPClient(client *http.Client) UserHTTPClient {
 	return &UserHTTPClientImpl{client}
 }
 
+func (c *UserHTTPClientImpl) AddCard(ctx context.Context, in *AddCardReq, opts ...http.CallOption) (*AddCardReply, error) {
+	var out AddCardReply
+	pattern := "/users/{user_id}/card"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserAddCard))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *UserHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReq, opts ...http.CallOption) (*CreateUserReply, error) {
 	var out CreateUserReply
 	pattern := "/user"
@@ -175,6 +272,19 @@ func (c *UserHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReq, 
 	opts = append(opts, http.Operation(OperationUserCreateUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UserHTTPClientImpl) DeleteCard(ctx context.Context, in *DeleteCardReq, opts ...http.CallOption) (*DeleteCardReply, error) {
+	var out DeleteCardReply
+	pattern := "/users/{user_id}/cards/{card_id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUserDeleteCard))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -207,9 +317,22 @@ func (c *UserHTTPClientImpl) GetUserByUsername(ctx context.Context, in *GetUserB
 	return &out, err
 }
 
+func (c *UserHTTPClientImpl) ListCards(ctx context.Context, in *ListCardsReq, opts ...http.CallOption) (*ListCardsReply, error) {
+	var out ListCardsReply
+	pattern := "/users/{user_id}/cards"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUserListCards))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *UserHTTPClientImpl) Save(ctx context.Context, in *SaveUserReq, opts ...http.CallOption) (*SaveUserReply, error) {
 	var out SaveUserReply
-	pattern := "/user"
+	pattern := "/user/{id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserSave))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -222,7 +345,7 @@ func (c *UserHTTPClientImpl) Save(ctx context.Context, in *SaveUserReq, opts ...
 
 func (c *UserHTTPClientImpl) VerifyPassword(ctx context.Context, in *VerifyPasswordReq, opts ...http.CallOption) (*VerifyPasswordReply, error) {
 	var out VerifyPasswordReply
-	pattern := "/user/verify"
+	pattern := "/users/verify"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserVerifyPassword))
 	opts = append(opts, http.PathTemplate(pattern))

@@ -5,6 +5,8 @@ server:
   grpc:
     addr: 0.0.0.0:9005
     timeout: 1s
+auth:
+  key: super-secret-key
 data:
   database:
     driver: postgres

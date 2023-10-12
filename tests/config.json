@@ -16,6 +16,10 @@
     "cart": {
       "grpc_uri": "localhost:9002",
       "http_uri": "http://localhost:8002"
+    },
+    "user": {
+      "grpc_uri": "localhost:9005",
+      "http_uri": "http://localhost:8005"
     }
   }
 }

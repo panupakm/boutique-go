@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"github.com/google/uuid"
+	"github.com/panupakm/boutique-go/app/user/internal/data/ent/card"
 	"github.com/panupakm/boutique-go/app/user/internal/data/ent/schema"
 	"github.com/panupakm/boutique-go/app/user/internal/data/ent/user"
 )
@@ -11,6 +13,75 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	cardFields := schema.Card{}.Fields()
+	_ = cardFields
+	// cardDescNumber is the schema descriptor for number field.
+	cardDescNumber := cardFields[1].Descriptor()
+	// card.NumberValidator is a validator for the "number" field. It is called by the builders before save.
+	card.NumberValidator = func() func(string) error {
+		validators := cardDescNumber.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+			validators[2].(func(string) error),
+		}
+		return func(number string) error {
+			for _, fn := range fns {
+				if err := fn(number); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// cardDescName is the schema descriptor for name field.
+	cardDescName := cardFields[2].Descriptor()
+	// card.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	card.NameValidator = func() func(string) error {
+		validators := cardDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// cardDescCcv is the schema descriptor for ccv field.
+	cardDescCcv := cardFields[3].Descriptor()
+	// card.CcvValidator is a validator for the "ccv" field. It is called by the builders before save.
+	card.CcvValidator = func() func(int) error {
+		validators := cardDescCcv.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(ccv int) error {
+			for _, fn := range fns {
+				if err := fn(ccv); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// cardDescExpirationYear is the schema descriptor for expiration_year field.
+	cardDescExpirationYear := cardFields[4].Descriptor()
+	// card.ExpirationYearValidator is a validator for the "expiration_year" field. It is called by the builders before save.
+	card.ExpirationYearValidator = cardDescExpirationYear.Validators[0].(func(int) error)
+	// cardDescExpirationMonth is the schema descriptor for expiration_month field.
+	cardDescExpirationMonth := cardFields[5].Descriptor()
+	// card.ExpirationMonthValidator is a validator for the "expiration_month" field. It is called by the builders before save.
+	card.ExpirationMonthValidator = cardDescExpirationMonth.Validators[0].(func(int) error)
+	// cardDescID is the schema descriptor for id field.
+	cardDescID := cardFields[0].Descriptor()
+	// card.DefaultID holds the default value on creation for the id field.
+	card.DefaultID = cardDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescName is the schema descriptor for name field.
@@ -25,4 +96,8 @@ func init() {
 	userDescPasswordHash := userFields[3].Descriptor()
 	// user.PasswordHashValidator is a validator for the "password_hash" field. It is called by the builders before save.
 	user.PasswordHashValidator = userDescPasswordHash.Validators[0].(func(string) error)
+	// userDescID is the schema descriptor for id field.
+	userDescID := userFields[0].Descriptor()
+	// user.DefaultID holds the default value on creation for the id field.
+	user.DefaultID = userDescID.Default.(func() uuid.UUID)
 }

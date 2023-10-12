@@ -11,6 +11,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+func Username() string {
+	return gofakeit.Username()
+}
+
+func Name() string {
+	return gofakeit.Name()
+}
+
+func Email() string {
+	return gofakeit.Email()
+}
+
 func GenerateProducts(ctx context.Context, database *mongo.Database, collection string, fmtstr string, num uint, drop bool) []string {
 
 	coll := database.Collection(collection)

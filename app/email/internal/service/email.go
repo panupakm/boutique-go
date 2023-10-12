@@ -5,12 +5,12 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 
-	pb "github.com/panupakm/boutique-go/api/email"
+	api "github.com/panupakm/boutique-go/api/email"
 	"github.com/panupakm/boutique-go/app/email/internal/biz"
 )
 
 type EmailService struct {
-	pb.UnimplementedEmailServer
+	api.UnimplementedEmailServer
 
 	ec  *biz.EmailUseCase
 	log *log.Helper
@@ -23,7 +23,7 @@ func NewEmailService(ec *biz.EmailUseCase, logger log.Logger) *EmailService {
 	}
 }
 
-func (s *EmailService) SendOrderConfirmation(ctx context.Context, req *pb.SendOrderConfirmationRequest) (*pb.Empty, error) {
+func (s *EmailService) SendOrderConfirmation(ctx context.Context, req *api.SendOrderConfirmationRequest) (*api.Empty, error) {
 	err := s.ec.SendOrderConfirmation(ctx, req.GetEmail(), req)
-	return &pb.Empty{}, err
+	return &api.Empty{}, err
 }

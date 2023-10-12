@@ -24,6 +24,9 @@ const (
 	User_Save_FullMethodName              = "/boutiqueshop.User/Save"
 	User_CreateUser_FullMethodName        = "/boutiqueshop.User/CreateUser"
 	User_VerifyPassword_FullMethodName    = "/boutiqueshop.User/VerifyPassword"
+	User_AddCard_FullMethodName           = "/boutiqueshop.User/AddCard"
+	User_ListCards_FullMethodName         = "/boutiqueshop.User/ListCards"
+	User_DeleteCard_FullMethodName        = "/boutiqueshop.User/DeleteCard"
 )
 
 // UserClient is the client API for User service.
@@ -35,6 +38,9 @@ type UserClient interface {
 	Save(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserReply, error)
 	CreateUser(ctx context.Context, in *CreateUserReq, opts ...grpc.CallOption) (*CreateUserReply, error)
 	VerifyPassword(ctx context.Context, in *VerifyPasswordReq, opts ...grpc.CallOption) (*VerifyPasswordReply, error)
+	AddCard(ctx context.Context, in *AddCardReq, opts ...grpc.CallOption) (*AddCardReply, error)
+	ListCards(ctx context.Context, in *ListCardsReq, opts ...grpc.CallOption) (*ListCardsReply, error)
+	DeleteCard(ctx context.Context, in *DeleteCardReq, opts ...grpc.CallOption) (*DeleteCardReply, error)
 }
 
 type userClient struct {
@@ -90,6 +96,33 @@ func (c *userClient) VerifyPassword(ctx context.Context, in *VerifyPasswordReq, 
 	return out, nil
 }
 
+func (c *userClient) AddCard(ctx context.Context, in *AddCardReq, opts ...grpc.CallOption) (*AddCardReply, error) {
+	out := new(AddCardReply)
+	err := c.cc.Invoke(ctx, User_AddCard_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) ListCards(ctx context.Context, in *ListCardsReq, opts ...grpc.CallOption) (*ListCardsReply, error) {
+	out := new(ListCardsReply)
+	err := c.cc.Invoke(ctx, User_ListCards_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) DeleteCard(ctx context.Context, in *DeleteCardReq, opts ...grpc.CallOption) (*DeleteCardReply, error) {
+	out := new(DeleteCardReply)
+	err := c.cc.Invoke(ctx, User_DeleteCard_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -99,6 +132,9 @@ type UserServer interface {
 	Save(context.Context, *SaveUserReq) (*SaveUserReply, error)
 	CreateUser(context.Context, *CreateUserReq) (*CreateUserReply, error)
 	VerifyPassword(context.Context, *VerifyPasswordReq) (*VerifyPasswordReply, error)
+	AddCard(context.Context, *AddCardReq) (*AddCardReply, error)
+	ListCards(context.Context, *ListCardsReq) (*ListCardsReply, error)
+	DeleteCard(context.Context, *DeleteCardReq) (*DeleteCardReply, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -120,6 +156,15 @@ func (UnimplementedUserServer) CreateUser(context.Context, *CreateUserReq) (*Cre
 }
 func (UnimplementedUserServer) VerifyPassword(context.Context, *VerifyPasswordReq) (*VerifyPasswordReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyPassword not implemented")
+}
+func (UnimplementedUserServer) AddCard(context.Context, *AddCardReq) (*AddCardReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCard not implemented")
+}
+func (UnimplementedUserServer) ListCards(context.Context, *ListCardsReq) (*ListCardsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCards not implemented")
+}
+func (UnimplementedUserServer) DeleteCard(context.Context, *DeleteCardReq) (*DeleteCardReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCard not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -224,6 +269,60 @@ func _User_VerifyPassword_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_AddCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCardReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).AddCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_AddCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).AddCard(ctx, req.(*AddCardReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_ListCards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCardsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListCards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListCards_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListCards(ctx, req.(*ListCardsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_DeleteCard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCardReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).DeleteCard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_DeleteCard_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).DeleteCard(ctx, req.(*DeleteCardReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +349,18 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyPassword",
 			Handler:    _User_VerifyPassword_Handler,
+		},
+		{
+			MethodName: "AddCard",
+			Handler:    _User_AddCard_Handler,
+		},
+		{
+			MethodName: "ListCards",
+			Handler:    _User_ListCards_Handler,
+		},
+		{
+			MethodName: "DeleteCard",
+			Handler:    _User_DeleteCard_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
