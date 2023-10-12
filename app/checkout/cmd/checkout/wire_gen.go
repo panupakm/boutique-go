@@ -26,7 +26,8 @@ import (
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
 	cartServiceClient := data.NewCartServiceClient(confData)
 	catalogClient := data.NewCatalogServiceClient(confData)
-	dataData, cleanup, err := data.NewData(cartServiceClient, catalogClient, logger)
+	userClient := data.NewUserServiceClient(confData)
+	dataData, cleanup, err := data.NewData(cartServiceClient, catalogClient, userClient, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -34,7 +35,9 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	cartUseCase := biz.NewCartUseCase(cartRepo, logger)
 	catalogRepo := data.NewCatalogRepo(dataData, logger)
 	catalogUseCase := biz.NewCatalogUseCase(catalogRepo, logger)
-	checkoutUseCase := biz.NewCheckoutUseCase(cartUseCase, catalogUseCase, logger)
+	userRepo := data.NewUserRepo(dataData, logger)
+	userUseCase := biz.NewUserUseCase(userRepo, logger)
+	checkoutUseCase := biz.NewCheckoutUseCase(cartUseCase, catalogUseCase, userUseCase, logger)
 	checkoutService := service.NewCheckoutService(checkoutUseCase, logger)
 	grpcServer := server.NewGRPCServer(confServer, checkoutService, logger)
 	httpServer := server.NewHTTPServer(confServer, checkoutService, logger)

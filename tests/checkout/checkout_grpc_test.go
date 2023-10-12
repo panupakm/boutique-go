@@ -2,15 +2,17 @@ package checkout
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"testing"
-	"time"
 
+	"github.com/google/uuid"
 	cartapi "github.com/panupakm/boutique-go/api/cart"
 	catalogapi "github.com/panupakm/boutique-go/api/catalog"
 	checkoutapi "github.com/panupakm/boutique-go/api/checkout"
 	shared "github.com/panupakm/boutique-go/api/shared"
+	userapi "github.com/panupakm/boutique-go/api/user"
+	"github.com/panupakm/boutique-go/pkg/boutique/generators"
+	"github.com/panupakm/boutique-go/pkg/util"
 	tests "github.com/panupakm/boutique-go/tests"
 	serviceclients "github.com/panupakm/boutique-go/tests/service-clients"
 	"github.com/stretchr/testify/require"
@@ -19,6 +21,7 @@ import (
 var cartClient cartapi.CartServiceClient
 var catalogClient catalogapi.CatalogClient
 var checkoutClient checkoutapi.CheckoutClient
+var userClient userapi.UserClient
 var Client catalogapi.CatalogClient
 
 func TestMain(m *testing.M) {
@@ -27,6 +30,7 @@ func TestMain(m *testing.M) {
 	cartClient = cartapi.NewCartServiceClient(serviceclients.GrpcClientMaps["cart"])
 	catalogClient = catalogapi.NewCatalogClient(serviceclients.GrpcClientMaps["catalog"])
 	checkoutClient = checkoutapi.NewCheckoutClient(serviceclients.GrpcClientMaps["checkout"])
+	userClient = userapi.NewUserClient(serviceclients.GrpcClientMaps["user"])
 
 	code := m.Run()
 	tests.TearDown()
@@ -38,7 +42,12 @@ func TestGrpcCheckout(t *testing.T) {
 	ctx := context.Background()
 	n := 10
 
-	userId := fmt.Sprintf("user_id_%d", time.Now().UnixMilli())
+	replyuser, err := userClient.CreateUser(ctx, &userapi.CreateUserReq{
+		Username: util.GetRandomStr(10),
+		Password: util.GetRandomStr(10),
+		Email:    generators.Email(),
+	})
+
 	listRes, err := catalogClient.ListProducts(ctx, &catalogapi.ListProductsRequest{
 		PageSize: int32(n),
 	})
@@ -50,7 +59,7 @@ func TestGrpcCheckout(t *testing.T) {
 	for i, p := range listRes.Products {
 		prices[i] = p.PriceUsd
 		req := cartapi.AddItemRequest{
-			UserId: userId,
+			UserId: replyuser.Id,
 			Item: &shared.CartItem{
 				ProductId: p.Id,
 				Quantity:  quantities[i],
@@ -61,7 +70,7 @@ func TestGrpcCheckout(t *testing.T) {
 	}
 
 	pores, err := checkoutClient.PlaceOrder(ctx, &checkoutapi.PlaceOrderRequest{
-		UserId:       userId,
+		UserId:       replyuser.Id,
 		Email:        "testcheckout@boutique.com",
 		UserCurrency: "THB",
 		Address: &shared.Address{
@@ -90,4 +99,31 @@ func TestGrpcCheckout(t *testing.T) {
 		require.NotEmpty(t, item.Item.ProductId)
 		require.NotZero(t, item.Item.Quantity)
 	}
+}
+
+func TestGrpcCheckoutFailed(t *testing.T) {
+
+	ctx := context.Background()
+
+	userId := uuid.New().String()
+	_, err := checkoutClient.PlaceOrder(ctx, &checkoutapi.PlaceOrderRequest{
+		UserId:       userId,
+		Email:        "testcheckout@boutique.com",
+		UserCurrency: "THB",
+		Address: &shared.Address{
+			StreetAddress: "123 Shipping St",
+			City:          "Seattle",
+			State:         "WA",
+			Country:       "USA",
+			ZipCode:       98101,
+		},
+		CreditCard: &shared.CreditCardInfo{
+			CreditCardNumber:          "1234567890123456",
+			CreditCardCvv:             123,
+			CreditCardExpirationYear:  2043,
+			CreditCardExpirationMonth: 12,
+		},
+	})
+
+	require.Error(t, err)
 }

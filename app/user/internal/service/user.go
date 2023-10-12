@@ -81,3 +81,15 @@ func (u *UserService) ListCards(ctx context.Context, in *api.ListCardsReq) (*api
 		Cards: replyCards,
 	}, nil
 }
+
+func (u *UserService) GetUser(ctx context.Context, in *api.GetUserReq) (*api.GetUserReply, error) {
+	user, err := u.uc.GetUser(ctx, uuid.MustParse(in.Id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.GetUserReply{
+		Id:       user.Id.String(),
+		Username: user.Name,
+	}, nil
+}

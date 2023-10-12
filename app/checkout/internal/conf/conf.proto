@@ -32,6 +32,10 @@ message Data {
   message CatalogService {
     string uri = 1;
   }
+  message UserService {
+    string uri = 1;
+  }
   CartService cart_service = 1;
   CatalogService catalog_service = 2;
+  UserService user_service = 3;
 }

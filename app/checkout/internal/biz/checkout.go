@@ -17,17 +17,30 @@ type CheckoutUseCase struct {
 	log  *log.Helper
 	cluc *CatalogUseCase
 	cuc  *CartUseCase
+	uuc  *UserUseCase
 }
 
-func NewCheckoutUseCase(cuc *CartUseCase, cluc *CatalogUseCase, logger log.Logger) *CheckoutUseCase {
+func NewCheckoutUseCase(cuc *CartUseCase, cluc *CatalogUseCase, uuc *UserUseCase, logger log.Logger) *CheckoutUseCase {
 	return &CheckoutUseCase{
 		cuc:  cuc,
 		cluc: cluc,
+		uuc:  uuc,
 		log:  log.NewHelper(log.With(logger, "module", "checkout/usercase")),
 	}
 }
 
 func (cu *CheckoutUseCase) PlaceOrder(ctx context.Context, userId string) (res order.OrderResult, err error) {
+
+	user, err := cu.uuc.Get(ctx, userId)
+	if err != nil {
+		return
+	}
+
+	if user == nil {
+		err = fmt.Errorf("No user %s", userId)
+		return
+	}
+
 	orderId, err := uuid.NewUUID()
 	if err != nil {
 		return

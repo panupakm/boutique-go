@@ -24,7 +24,7 @@ func NewCartRepo(data *Data, logger log.Logger) biz.CartRepo {
 }
 
 func (r *cartRepo) GetCart(ctx context.Context, userId string) (cart.Cart, error) {
-	pbc, err := r.data.cc.GetCart(ctx, &cartApi.GetCartRequest{
+	pbc, err := r.data.cartc.GetCart(ctx, &cartApi.GetCartRequest{
 		UserId: userId,
 	})
 
@@ -38,7 +38,7 @@ func (r *cartRepo) GetCart(ctx context.Context, userId string) (cart.Cart, error
 }
 
 func (r *cartRepo) EmptyCart(ctx context.Context, userId string) error {
-	_, err := r.data.cc.EmptyCart(ctx, &cartApi.EmptyCartRequest{})
+	_, err := r.data.cartc.EmptyCart(ctx, &cartApi.EmptyCartRequest{})
 
 	if err != nil {
 		return err

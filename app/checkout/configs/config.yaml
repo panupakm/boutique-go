@@ -10,3 +10,5 @@ data:
     uri: 127.0.0.1:9002
   catalogService:
     uri: 127.0.0.1:9003
+  userService:
+    uri: 127.0.0.1:9005

@@ -24,7 +24,7 @@ func NewCatalogRepo(data *Data, logger log.Logger) biz.CatalogRepo {
 }
 
 func (r *catalogRepo) GetProduct(ctx context.Context, productId string) (product.Product, error) {
-	p, err := r.data.clc.GetProduct(ctx, &catalogApi.GetProductRequest{
+	p, err := r.data.catlc.GetProduct(ctx, &catalogApi.GetProductRequest{
 		Id: productId,
 	})
 

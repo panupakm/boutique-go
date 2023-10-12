@@ -48,6 +48,11 @@ func (uc *UserUsecase) CreateUser(ctx context.Context, password string, user *Us
 	return uc.urepo.Create(ctx, user)
 }
 
+// GetUser get user
+func (uc *UserUsecase) GetUser(ctx context.Context, id uuid.UUID) (*User, error) {
+	return uc.urepo.FindByID(ctx, id)
+}
+
 // AddCard a new card for a user
 func (uc *UserUsecase) AddCard(ctx context.Context, userId uuid.UUID, card *Card) *Card {
 	return uc.crepo.Create(ctx, userId, card)

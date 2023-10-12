@@ -8,22 +8,24 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/google/wire"
 
-	cartApi "github.com/panupakm/boutique-go/api/cart"
-	catalogApi "github.com/panupakm/boutique-go/api/catalog"
+	cartapi "github.com/panupakm/boutique-go/api/cart"
+	catlapi "github.com/panupakm/boutique-go/api/catalog"
+	userapi "github.com/panupakm/boutique-go/api/user"
 	"github.com/panupakm/boutique-go/app/checkout/internal/conf"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewCartServiceClient, NewCatalogServiceClient, NewCartRepo, NewCatalogRepo)
+var ProviderSet = wire.NewSet(NewData, NewCartServiceClient, NewCatalogServiceClient, NewCartRepo, NewCatalogRepo, NewUserServiceClient, NewUserRepo)
 
 // Data .
 type Data struct {
-	cc  cartApi.CartServiceClient
-	clc catalogApi.CatalogClient
+	cartc cartapi.CartServiceClient
+	catlc catlapi.CatalogClient
+	userc userapi.UserClient
 }
 
 // NewCartServiceClient create a client to connect to the cart service.
-func NewCartServiceClient(c *conf.Data) cartApi.CartServiceClient {
+func NewCartServiceClient(c *conf.Data) cartapi.CartServiceClient {
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint(c.CartService.Uri),
@@ -34,11 +36,11 @@ func NewCartServiceClient(c *conf.Data) cartApi.CartServiceClient {
 	if err != nil {
 		panic(err)
 	}
-	return cartApi.NewCartServiceClient(conn)
+	return cartapi.NewCartServiceClient(conn)
 }
 
 // NewCatalogClient create a client to connect to the catalog service.
-func NewCatalogServiceClient(c *conf.Data) catalogApi.CatalogClient {
+func NewCatalogServiceClient(c *conf.Data) catlapi.CatalogClient {
 	conn, err := grpc.DialInsecure(
 		context.Background(),
 		grpc.WithEndpoint(c.CatalogService.Uri),
@@ -49,16 +51,31 @@ func NewCatalogServiceClient(c *conf.Data) catalogApi.CatalogClient {
 	if err != nil {
 		panic(err)
 	}
-	return catalogApi.NewCatalogClient(conn)
+	return catlapi.NewCatalogClient(conn)
+}
+
+func NewUserServiceClient(c *conf.Data) userapi.UserClient {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(c.UserService.Uri),
+		grpc.WithMiddleware(
+			recovery.Recovery(),
+		),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return userapi.NewUserClient(conn)
 }
 
 // NewData .
-func NewData(cc cartApi.CartServiceClient, clc catalogApi.CatalogClient, logger log.Logger) (*Data, func(), error) {
+func NewData(cc cartapi.CartServiceClient, clc catlapi.CatalogClient, userc userapi.UserClient, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
 	return &Data{
-		cc:  cc,
-		clc: clc,
+		cartc: cc,
+		catlc: clc,
+		userc: userc,
 	}, cleanup, nil
 }
